@@ -23,7 +23,7 @@ Sept/23/2023
 * cargo has a lot of options, and a special search system `cargo search` 
 
 Sept/29/2023 06:41
-==================
+------------------
 
 https://doc.rust-lang.org/book/ch01-03-hello-cargo.html
 
@@ -98,3 +98,46 @@ dependencies = [
 https://doc.rust-lang.org/cargo/guide/index.html 
 
 O ".toml" é na verdade uma especificação tipo yaml : https://toml.io/en/ 
+
+Sept/29/2023 08:19
+------------------
+
+https://doc.rust-lang.org/book/ch02-00-guessing-game-tutorial.html
+
+> At a "beginner" level, rust is not quite different than C (not C++. C) . The difference is Cargo, that is there to help you packaging (which is a very welcome 
+improvement over the more esoteric failure prone makefile systems we typically see for projects in the C language).
+
+Not needing to worry about a makefile to make a reliable build is very welcome, indeed.
+
+> QUESTION: What about that `edition = "2021"` inside the Cargo.toml file? I've just ran rustup update and I'm already using rust from 2023...
+>
+> ANSWER: edition can be thought about an "specification format". edition says the Cargo file is using a format for 2021: it was not changed in 2023, so they are keeping it
+> as it is.
+
+> QUESTION: Just created a main.rs file. And cargo doesn't seems to recognize it. 
+> ANSWER: MIND THE FILE TIMESTAMPS. If the file is older than the binary, it won't recompile it. (DUH).
+
+> Macro calls needs those `{ }` things! `println! "Hello world"` will fail. 
+
+```
+abpicoli@DESKTOP-EPFPMPH:/mnt/e/projetos/my_rust_journal/chapter3_guessing_game$ cargo run
+   Compiling chapter3_guessing_game v0.1.0 (/mnt/e/projetos/my_rust_journal/chapter3_guessing_game)
+error: expected one of `(`, `[`, or `{`, found `"Hello chapter 3"`
+ --> src/main.rs:3:14
+  |
+3 |     println! "Hello chapter 3";
+  |              ^^^^^^^^^^^^^^^^^ expected one of `(`, `[`, or `{`
+
+```
+SOLUTION:
+
+```
+fn main() {
+
+    println! {"Hello chapter 3"} ;
+
+}
+```
+
+> What is the difference between '(' , '[' or '{' when invoking a macro??
+
