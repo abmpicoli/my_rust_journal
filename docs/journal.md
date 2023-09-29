@@ -69,6 +69,7 @@ Gerado depois que meti um cargo build no bixo.
 # It is not intended for manual editing.
 version = 3
 
+...
 [[package]]
 name = "aho-corasick"
 version = "1.1.1"
@@ -77,19 +78,6 @@ checksum = "ea5d730647d4fadd988536d06fecce94b7b4f2a7efdae548f1cf4b63205518ab"
 dependencies = [
  "memchr",
 ]
-
-[[package]]
-name = "learning_rust"
-version = "0.1.0"
-dependencies = [
- "regex",
-]
-
-[[package]]
-name = "memchr"
-version = "2.6.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f232d6ef707e1956a43342693d2a31e72989554d58299d7a88738cc95b0d35c"
 
 [[package]]
 name = "regex"
@@ -102,18 +90,11 @@ dependencies = [
  "regex-syntax",
 ]
 
-[[package]]
-name = "regex-automata"
-version = "0.3.8"
-source = "git+https://github.com/rust-lang/regex.git#27a25385c0bd1228716271668febc88bd8c74932"
-dependencies = [
- "aho-corasick",
- "memchr",
- "regex-syntax",
-]
-
-[[package]]
-name = "regex-syntax"
-version = "0.7.5"
-source = "git+https://github.com/rust-lang/regex.git#27a25385c0bd1228716271668febc88bd8c74932"
+...
 ```
+
+> O Cargo é poderoso pra cacete: dá pra referenciar multiplos registros, e tem um Cargo.rs pra rodar um "rust script" que constroi coisas maus complexas.
+
+https://doc.rust-lang.org/cargo/guide/index.html 
+
+O ".toml" é na verdade uma especificação tipo yaml : https://toml.io/en/ 
