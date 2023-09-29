@@ -1,3 +1,9 @@
+# The big challenges:
+
+The Rust package system is far from being powerful.
+
+While most languages 
+
 ```mermaid
 mindmap main("make the equivalent of a bridge in rust")
   config(configuration)
@@ -13,6 +19,5 @@ a bridge.properties")
         )
   logging("How to have a configurable and customizable logging system that can write both 
   to files and consoles, with a configurable log level by category?")
-  blu
-
+  Meu... começa a aprender a porra da linguagem primeiro??
 ```
