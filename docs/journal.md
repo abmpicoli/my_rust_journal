@@ -139,5 +139,48 @@ fn main() {
 }
 ```
 
-> What is the difference between '(' , '[' or '{' when invoking a macro??
+> Question: What is the difference between '(' , '[' or '{' when invoking a macro??
+> 
+> Answer: (hypothesis) : because a macro can be invoked over multiple object types: single stuff ("x"). vector stuff ["x"] or tuple stuff? {"x"}? 
+
+https://doc.rust-lang.org/reference/macros.html
+
+
+Sept/30/2023 09:46
+------------------
+
+Initial evaluation: Can we use Saxon from RUST?
+
+One of the demands of my work is xml processing. Our solution is based from the end user perspective 
+(that is, someone developing an integration using the java framework we have) is a typical web-app 
+configuration (web.xml) that takes a properties file that contains specifications of a sequence of "processors"
+to be invoked. 
+
+The glue specifying the order between processors and the data used is XML, specifically through XSL processing XML data.
+
+So, if this platform is to be ported in some way to rust, without causing extensive re-learning of another language than
+the typical XSLT the end users are accustomed to, Rust must have something that supports XSLT. Preferably version 2 or 3.
+
+The only tool in the market I know to support that is Saxonica's Saxon 12.
+
+All xml libraries I've seen of rust are very incipient, not even supporting XSLT. 
+
+And I've discovered that Saxon doesn't support Rust. 
+
+Well. Rust supports C calls (grudgingly, dare I say?) and Saxon supports C programs. So maybe 
+
+
+https://www.saxonica.com/saxon-c/documentation12/index.html#!samples/samples_c 
+this can be done eventually.
+
+I'm not too worried about environment compatibilities now because the solutions tend to be run from inside a docker environment,
+with a fixed Ubuntu OS. 
+
+WELL::: BABY STEPS !
+
+Resuming https://doc.rust-lang.org/book/ch02-00-guessing-game-tutorial.html 
+
+I've created the project inside 'chapter3_guessing_game' directory.
+
+
 
