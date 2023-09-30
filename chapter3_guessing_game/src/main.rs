@@ -14,6 +14,19 @@ fn main() {
 	// "mut": variables in RUST are immutable by default. so if we 
 	// need something that receives user input (mutable data)
 	// we need to place the mut prefix.
+	
+	// In rust: ::new() is only a METHOD to create an empty string.
+	// it is a convention: not a constructor.
+	
+	// https://doc.rust-lang.org/reference/keywords.html shows what are the rust keywords.
+	// "new" is not one of them, like in java where we would write (in this context, a writable string, it would 
+	// a a stringbuidler. So `StringBuilder guess = new StringBuilder()`
+	// 
+	// So it is not like everything must be an object... like java. Rust is not an object oriented language
+	// necessarily.
+	//
+	// Which also means that the String in rust is MUTABLE?
+	
     let mut guess = String::new();
 
     io::stdin()
