@@ -1,8 +1,10 @@
-use std::io;
+
+// This is like a java import directive. I can comment this out and then use the fully qualified name.
+//use std::io;
 
 fn main() {
 
-    println! ["Hello chapter 3.1"] ;
+    println! ["Hello chapter 3.2"] ;
     println!("Guess the number!");
 
     println!("Please input your guess.");
@@ -29,8 +31,9 @@ fn main() {
 	
     let mut guess = String::new();
 
-    io::stdin()
-
+    // if I comment the use `std::io` out , I may still use the io method by full invocation.
+    //io::stdin()
+    std::io::stdin()
 		// Hm... parameter by reference? So the content can be changed? 
 		// OH. It DOES make sense, right? guess is used for STORING
 		// user input. 
