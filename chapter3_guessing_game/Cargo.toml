@@ -6,3 +6,6 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+
+# 0.8.5 is equivalent to "something that is 0.8.5 but less than 0.8.9999999999999999999999999999999999999"
+rand = "0.8.5"

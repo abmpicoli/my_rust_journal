@@ -180,7 +180,103 @@ WELL::: BABY STEPS !
 
 Resuming https://doc.rust-lang.org/book/ch02-00-guessing-game-tutorial.html 
 
-I've created the project inside 'chapter3_guessing_game' directory.
+I've created the project inside 'chapter3_guessing_game' directory. And the insights I have are in multiple commits in code comments in the main.rs
+
+Oct/1/2023 09:51
+----------------
+
+### rust use  ~= java import
+In the last day, I did discover that what in java we call "packages" and the "import" directive are not that different (in a very first level view, mind that)
+
+`use std::io` is not unlike `import java.io.*` in java. In the sense it is only an abbreviation of a dependency involving
+methods that may be invoked without a full package reference.
+
+`use std::io ... stdin.read` 
+
+is equivalent to `std::io::stdin.read` 
+
+like with java `import java.io ... InputStream i ` 
+
+is the equivalent of `java.io.InputStream i`
+
+### rust is not object oriented. Not in first view.
+
+In java, even a main class is a class. the pattern is `class X { public static void main(String... args) { ... } `. Classes have constructors with specific 
+invocations.
+
+In rust, what we have are conventions: `let mut x = String::new` is not the same thing as `StringBuilder x = new StringBuilder()`.
+
+For starters:
+
+* the `new` in the rust code is a *convention*. I could call the constructor whatever I want. the new is only a method name commonly used to instantiate new instances.
+
+### BIG BIG BIG difference between java and rust!
+
+In rust, libraries are provided for common functions, so in a sense there is an "equivalent"
+of the java standard API. And the java API is **HUGE**. java.io, java.util, java.text. java.sql ... And *EVERYTHING* is packaged as a single release. Java 1.8, java 9, java 10.
+
+And for java, a java runtime must comes with every single package there as part of 
+the package.
+
+Not so with rust, it seems:
+
+IN java, want to use the random generator? Just invoke 
+```
+import java.util.Random 
+
+...
+
+public static void main(String... args) {
+	Random x = new Random();
+	x = Random.nextInt();
+}
+```
+
+In rust, even something as trivial as random number generation is out, and it
+must be specified in the cargo.toml.
+
+Well... rust  is not unlike C, in this aspect right? To use rand we need to
+`#include <stdlib.h>`... But YES, it is different! Because the stdlib reference
+is *FLOATING*: it is a reference to whatever is installed into your own computer.
+
+Like java. Or python with that PIP install thing (at least at first view. Not a python expert).
+
+In rust, I must specify a library *and a version* . In the cargo.toml:
+
+```
+[dependencies]
+rand = "0.8.5"
+```
+
+And only then can I use it inside the code.
 
 
+UPDATE: When I've tried to simply qualify the reference to the code from inside the code, I've just discovered that rust crates are crazy!!!
 
+If you have a code like 
+
+```use rand::Rng
+
+       let secret_number = rand::thread_rng().gen_range(1..=100);
+
+```
+
+Obviously I could use the full reference package, like, ignore the rand::Rng 
+
+and do something like this... Right? RIGHT?? WRONG!
+
+```
+    let secret_number = rand::Rng::rand::thread_rng().gen_range(1..=100);
+```
+
+error[E0223]: ambiguous associated type
+  --> src/main.rs:13:25
+   |
+13 |     let secret_number = <dyn rand::Rng>::rand::thread_rng().gen_range(1..=100);
+   |                         ^^^^^^^^^^^^^^^^^^^^^
+   |
+help: if there were a trait named `Example` with associated type `rand` implemented for `dyn Rng`, you could use the fully-qualified path
+
+THERE IS MUCH MORE TO rust crates than only the java equivalent of "packaged classes"... Baby steps. More to come.
+
+https://doc.rust-lang.org/book/ch02-00-guessing-game-tutorial.html#generating-a-random-number 
