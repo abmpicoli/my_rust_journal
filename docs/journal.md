@@ -46,6 +46,8 @@ O target/debug tem o que constroi com `cargo build`
 > Cargo.toml = dependencia flutuante: github repo X. 
 
 > Cargo.lock = dependência fixa gerada no build.
+UPDATE 03/Oct/2023: - e lock significa "locked mesmo": a dependência fica 
+parada no tempo até quando você der um `cargo update`
 
 ### Cargo.toml
 ```
@@ -280,3 +282,55 @@ help: if there were a trait named `Example` with associated type `rand` implemen
 THERE IS MUCH MORE TO rust crates than only the java equivalent of "packaged classes"... Baby steps. More to come.
 
 https://doc.rust-lang.org/book/ch02-00-guessing-game-tutorial.html#generating-a-random-number 
+
+03/Oct/2023
+-----------
+
+The more I look into it, the more I see that there is a big concern about packaging and documentation when publishing crates (which would be traditional java jars).
+
+The use directive mention a crate and then something inside the crate.
+
+"Remember that a crate is a collection of Rust source code files. " : se não tem uma distribuição binária, taí porque o build seria lento.
+
+If you look into the target directory, there is a debug/deps directory, that contains a reference to your local registry: /home/abpicoli/.cargo/registry/
+
+E:\projetos\my_rust_journal\chapter3_guessing_game\target\debug\deps\cfg_if-52fc72e823305762.rmeta: C:\Users\Usuario\.cargo\registry\src\index.crates.io-6f17d22bba15001f\cfg-if-1.0.0\src\lib.rs
+
+E:\projetos\my_rust_journal\chapter3_guessing_game\target\debug\deps\cfg_if-52fc72e823305762.d: C:\Users\Usuario\.cargo\registry\src\index.crates.io-6f17d22bba15001f\cfg-if-1.0.0\src\lib.rs
+
+C:\Users\Usuario\.cargo\registry\src\index.crates.io-6f17d22bba15001f\cfg-if-1.0.0\src\lib.rs:
+
+
+### A CRATE IS A SOURCE-CODE DISTRIBUTION!!! COMPLETELY DIFFERENT FROM JAVA AND THEIR MAVEN COUNTERPARTS!!
+
+
+### Shadowing: 
+
+In java, you specify the type and the variable with that name has that type, forever, in the scope of the application.
+
+In rust, you may have multiple versions of the same variable, with different types. 
+
+And the correct type is used depending on the context??? No, right? It seems the type is "shadowed" into a new type?
+
+Yes, this is what happens: guess becomes a u32 variable through the rest of the code.
+
+let mut guess = String::new();
+...
+let guess: u32 = guess.trim().parse().expect("Please type a number!")
+
+### Match:
+
+match is a switch for enumerations.
+
+But it is more... For example, the parse() method has an Ok(number) as an option, or an Err(error message) as other option, so you must specify the content, and can use the 
+parameter as useful information on responding to each case.
+
+```
+	let guess: u32 = match guess.trim().parse() {
+		Ok(num) => num, //just return the input number
+		Err(err) => {
+			println!("Bad number ! {err} {guess}"); // err =  the error message when parsing the input...
+			continue;
+		}
+	};
+```

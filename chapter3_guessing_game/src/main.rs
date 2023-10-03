@@ -1,8 +1,9 @@
 
 // This is like a java import directive. I can comment this out and then use the fully qualified name.
 //use std::io;
+use rand::Rng;
+use std::cmp::Ordering;
 
-use rand::Rng
 
 fn main() {
 
@@ -77,6 +78,8 @@ fn main() {
     println! ["Hello chapter 3.2"] ;
     println!("Guess the number!");
 
+
+	loop {
     println!("Please input your guess.");
 
 	// comments in rust are like single line comments in java.
@@ -151,6 +154,34 @@ fn main() {
 			// Guess the number!
 			// Please input your guess.
 
+	// October/3rd experiment: if I shadow a variable into a u32, can I unshadow it back to what it was?
+	// No, right? That would be silly: how can the computer know which context is used in each case.
+	
+	let guess: u32 = match guess.trim().parse() {
+		Ok(num) => num,
+		Err(err) => {
+			println!("Bad number ! {err} {guess}");
+			continue;
+		}
+	};
+		
+		
+	// If guess is u32, I would expected this to fail.
+	// Or will it? Will this implicitly say "hey, this guess must be the string one, let's just use it?
+	
+	
+	
+	// FAILED: // std::io::stdin().read_line(&mut guess).expect("boom!");
+	//    --> src/main.rs:162:29
+	//|
+// 162 |     std::io::stdin().read_line(&mut guess).expect("boom!");
+    // |                      --------- ^^^^^^^^^^ expected `&mut String`, found `&mut u32`
+    // |                      |
+    // |                      arguments to this method are incorrect
+    // |
+    // = note: expected mutable reference `&mut String`
+               // found mutable reference `&mut u32`
+	
 
 
     println!("You guessed: {guess}");
@@ -178,7 +209,55 @@ fn main() {
 	// error: could not compile `chapter3_guessing_game` (bin "chapter3_guessing_game") due to previous error
 	// $	
 	
-	println ! ("x = {x} ; x + 2 = {} ; y + 2 = {} ",x+2,y+2)
+	println ! ("x = {x} ; x + 2 = {} ; y + 2 = {} ",x+2,y+2) ;
 	
+	// match is sort of an equivalent to a switch statement in java.
+	
+	
+	// RANDOM THOUGHT... Why I need the '&secret_number' here??  Instead of a secret_number ? 
+	// OH: this is the borrow checker thing? 
+			// 210 |     match guess.cmp(secret_number) {
+			// |                 --- ^^^^^^^^^^^^^ expected `&u32`, found integer
+			// |                 |
+			// |                 arguments to this method are incorrect
+			// |
+		// note: method defined here
+		   // --> /rustc/d5c2e9c342b358556da91d61ed4133f6f50fc0c3/library/core/src/cmp.rs:775:8
+		// help: consider borrowing here
+			// |
+		// 210 |     match guess.cmp(&secret_number) {
+			// |                     +
 
+
+	// And What if I don't place all available options of the enum?
+			// error[E0004]: non-exhaustive patterns: `std::cmp::Ordering::Equal` and `std::cmp::Ordering::Greater` not covered
+		   // --> src/main.rs:222:8
+			// |
+		// 222 |     match guess.cmp(&secret_number) {
+			// |           ^^^^^^^^^^^^^^^^^^^^^^^^^ patterns `std::cmp::Ordering::Equal` and `std::cmp::Ordering::Greater` not covered
+			// |
+		// note: `std::cmp::Ordering` defined here
+		   // --> /rustc/d5c2e9c342b358556da91d61ed4133f6f50fc0c3/library/core/src/cmp.rs:333:1
+		   // ::: /rustc/d5c2e9c342b358556da91d61ed4133f6f50fc0c3/library/core/src/cmp.rs:339:5
+			// |
+			// = note: not covered
+		   // ::: /rustc/d5c2e9c342b358556da91d61ed4133f6f50fc0c3/library/core/src/cmp.rs:342:5
+			// |
+			// = note: not covered
+			// = note: the matched value is of type `std::cmp::Ordering`
+		// help: ensure that all possible cases are being handled by adding a match arm with a wildcard pattern, a match arm with multiple or-patterns as shown, or multiple match arms
+			// |
+		// 223 ~         Ordering::Less => println!("Too small!"),
+		// 224 ~         std::cmp::Ordering::Equal | std::cmp::Ordering::Greater => todo!()
+			// |
+
+	match guess.cmp(&secret_number) {
+		Ordering::Less => println!("Too small!"),
+		Ordering::Greater => println!("Too big!"),
+		Ordering::Equal => { 
+			println!("Yay! You guessed it!");
+			break;
+		}
+	}
+	}
 }
