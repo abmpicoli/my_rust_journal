@@ -106,7 +106,7 @@ Sept/29/2023 08:19
 
 https://doc.rust-lang.org/book/ch02-00-guessing-game-tutorial.html
 
-> At a "beginner" level, rust is not quite different than C (not C++. C) . The difference is Cargo, that is there to help you packaging (which is a very welcome 
+> In a "beginner" level view, rust is not quite different than C (not C++. C) . The difference is Cargo, that is there to help you packaging (which is a very welcome 
 improvement over the more esoteric failure prone makefile systems we typically see for projects in the C language).
 
 Not needing to worry about a makefile to make a reliable build is very welcome, indeed.
@@ -334,3 +334,23 @@ parameter as useful information on responding to each case.
 		}
 	};
 ```
+
+
+Oct/4/2023
+==========
+
+`rustup doc` has exactly the same documentation as the rust-lang site.
+
+
+The rosetta stone for java and rust:
+------------------------------------
+
+RUST / JAVA
+`let x = 5`        `final int x = 5`
+
+`let mut x = 5`    `int x = 5`
+
+
+`const x:i32 = 5`   // not quite an equivalent, because rust contains global scoped constants, outside of any classes.`
+                    //but in most situations ...
+					public static final int x = 5 (from inside a java class )
