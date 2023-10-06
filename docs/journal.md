@@ -345,12 +345,143 @@ Oct/4/2023
 The rosetta stone for java and rust:
 ------------------------------------
 
-RUST / JAVA
-`let x = 5`        `final int x = 5`
+|RUST | JAVA|
+|`let x = 5`|`final int x = 5`|
+|`let mut x = 5`|`int x = 5`|
+|`const x:i32 = 5`| roughly `private static final int x = 5` |
 
-`let mut x = 5`    `int x = 5`
+* the const keyword represents a global variable inside a single rust file(? explanation from Oct/5th - BBABY STEPS.
+* Unlike java, where final variables may be initialized during class construction, CONSTS must be evaluated at *compile time.*
+
+* The let operator cannot be used outside a function. so, you can't quite specify (at first view from Oct/5th, BABY STEPS) 
+  a "class level" mutable variable that is used in multiple functions. 
+  
+  So, at FIRST view, rust is quite close to a *FUNCTIONAL|PROCEDURAL* language? (More function than procedural, in fact...) BABY STEPS.
+  
+
+* The file [/ch3_1_variables_and_mutability/src/main.rs](/ch3_1_variables_and_mutability/src/main.rs) shows examples and comments regarding the usage of variables and constants in rust.
+
+Rust and java are the same regarding scope: 
+
+You can do stuff like this in RUST:
+```
+fn main() {
+
+	let x = 5;
+	{
+	
+		let x = 6; // can do it, same variable, inner scope, like java and c.
+		println! ("{x}") // 6
+	}
+
+}
+```
 
 
-`const x:i32 = 5`   // not quite an equivalent, because rust contains global scoped constants, outside of any classes.`
-                    //but in most situations ...
-					public static final int x = 5 (from inside a java class )
+RUST HAS SHADOWING IN THE SAME SCOPE!!!
+
+As long as a variable is not MUTABLE, the let keyword allow you to redefine the variable with the same name multiple times.
+
+let x = 1
+loop {
+	let x = x + 1; // valid
+	println!("{x}") // valid: print 2
+
+
+}
+
+Oct/6/2023
+==========
+
+Rust = Java with types - types must be known at compile type.
+
+
+A string parse method has this crazy signature on rust: ```pub fn parse<F>(&self) -> Result<F, <F as FromStr>::Err>where```
+(very like java generics, btw)
+
+If we place a variable
+
+`let x = "123".parse().expect("boom!")` , both sides of the assignment are unknown at compile time. ERROR.
+
+So, two solutions:
+
+`let x: u32 = "123".parse().expect("boom!")`
+
+or make other side of the equation have the desired type
+`let x = "123".parse::<u32>().expect("boom!")`
+
+INTEGERS:
+if unspecified , assumes i32.
+
+Can be i/u(8,16,32,64,128,size)
+isize / usize = architecture size : 32 bits for 32 bit machines, 64 for 64 bit machines.
+
+Thousand separators with _
+
+let x = 1_000 // i32
+let x:u32 = 1_000 // u32.
+let x = 1_000
+
+numeric expressions may have a type as well.
+
+let x = 1_000u128 //
+
+0x0f hex
+0o0f octal
+0b11110000 binary.
+0b11_110_000 binary as well. the _ may appear anywhere: it is ignored.
+
+### RUST doesn't accept overflow (at least in debug mode).
+
+```
+error: literal out of range for `u8`
+  --> src/main.rs:57:15
+   |
+57 |    let y:u8 = 10_000 ;
+   |               ^^^^^^
+   |
+   = note: the literal `10_000` does not fit into the type `u8` whose range is `0..=255`
+   = note: `#[deny(overflowing_literals)]` on by default
+```
+
+
+```
+let mut y:u8 = 255 ; 
+y = y + 1
+
+thread 'main' panicked at 'attempt to add with overflow', src/main.rs:58:8
+stack backtrace:
+   0: rust_begin_unwind
+             at /rustc/d5c2e9c342b358556da91d61ed4133f6f50fc0c3/library/std/src/panicking.rs:593:5
+   1: core::panicking::panic_fmt
+             at /rustc/d5c2e9c342b358556da91d61ed4133f6f50fc0c3/library/core/src/panicking.rs:67:14
+   2: core::panicking::panic
+             at /rustc/d5c2e9c342b358556da91d61ed4133f6f50fc0c3/library/core/src/panicking.rs:117:5
+   3: ch3_1_variables_and_mutability::main
+             at ./main.rs:58:8
+   4: core::ops::function::FnOnce::call_once
+             at /rustc/d5c2e9c342b358556da91d61ed4133f6f50fc0c3/library/core/src/ops/function.rs:250:5
+note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
+```
+
+characters are 4 bytes 
+
+let z:char='w';
+
+
++, -, *, /, % : all traditional arithmetic operations.
+
+### In RUST, CHARS ARE NOT INTEGERS: you can't cast a char into a integer directly and vice-versa.
+
+> There are no promotions and automatic conversions??
+
+```
+error[E0308]: mismatched types
+  --> src/main.rs:84:13
+   |
+70 |     let mut theChar:char = iCode;
+   |                     ---- expected due to this type
+...
+84 |         theChar = iCode;
+   |                   ^^^^^ expected `char`, found `u32`
+```

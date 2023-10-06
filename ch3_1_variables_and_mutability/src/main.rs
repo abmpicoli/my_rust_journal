@@ -52,4 +52,38 @@ fn main() {
 
 //For more information about this error, try `rustc --explain E0425`.
 
+// rust doesn't accept overflow in debug mode.
+//
+   //let mut y:u8 = 255 ;
+   //y = y + 1 ; 
+   //println!("Yet another y = {y}");
+   // gives kernel panic
+
+
+
+// CHARS ARE NOT INT. HENCE THIS CODE WON'T COMPILE
+	println!("The UNICODE TABLE!")
+
+	println!("HEX:     chars");
+
+	let mut iCode:u32 = 32;
+	let mut theChar:char = iCode;
+	loop {
+		if ( iCode % 256 == 0 ) {
+			println!("-------");
+		}
+		
+		if ( iCode % 32 == 0 ) {
+			print!("\n{:#08x}",iCode)
+		}
+		if (iCode % 8 == 0) {
+			print!(" ")
+		}
+		print!("{theChar}");
+		iCode = iCode + 1;
+		theChar = iCode;
+		if (iCode == 0xffffffff) {
+			break;
+		}
+	}
 }
