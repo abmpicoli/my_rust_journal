@@ -62,28 +62,34 @@ fn main() {
 
 
 // CHARS ARE NOT INT. HENCE THIS CODE WON'T COMPILE
-	println!("The UNICODE TABLE!")
+	println!("The UNi_code TABLE!");
 
 	println!("HEX:     chars");
 
-	let mut iCode:u32 = 32;
-	let mut theChar:char = iCode;
+	// RUST DOESNT PERFORM 
+
+	let mut i_code:u32 = 32;
 	loop {
-		if ( iCode % 256 == 0 ) {
-			println!("-------");
+		if  i_code % 256 == 0  {
+			println!("\n-------");
 		}
 		
-		if ( iCode % 32 == 0 ) {
-			print!("\n{:#08x}",iCode)
+		if  i_code % 32 == 0  {
+			print!("\n{:#08x}  ",i_code)
 		}
-		if (iCode % 8 == 0) {
+		if i_code % 8 == 0 {
 			print!(" ")
 		}
-		print!("{theChar}");
-		iCode = iCode + 1;
-		theChar = iCode;
-		if (iCode == 0xffffffff) {
+		
+		let the_char:char = match char::from_u32(i_code) {
+			Some(x) => x,
+			None => '·'
+		}; 
+		print!("{} ",the_char);
+		i_code = i_code + 1;
+		if i_code > char::MAX as u32 {
 			break;
 		}
 	}
 }
+

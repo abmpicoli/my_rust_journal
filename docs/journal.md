@@ -393,7 +393,7 @@ loop {
 Oct/6/2023
 ==========
 
-Rust = Java with types - types must be known at compile type.
+Rust = Java with types: types must be known at compile type.
 
 
 A string parse method has this crazy signature on rust: ```pub fn parse<F>(&self) -> Result<F, <F as FromStr>::Err>where```
@@ -485,3 +485,72 @@ error[E0308]: mismatched types
 84 |         theChar = iCode;
    |                   ^^^^^ expected `char`, found `u32`
 ```
+
+Oct/7/2023:
+===========
+
+RUST is CRAZY! Even the lowest of the variables have "methods" assigned to them!
+
+https://doc.rust-lang.org/std/primitive.char.html 
+
+With java, any operation like "is digit", would demand a different class, Character.
+
+With Rust, all methods are assigned TO THE PRIMITIVE TYPE ITSELF!
+
+Java:
+
+char c = '1';
+if (Character.isDigit(c)) ...
+
+Rust:
+
+let char c = '1'
+if (c.is_digit()) ...
+
+
+RUST CASTS: casts are explicit. They *DO* exist.
+
+let c = 'A'
+let cnum = c as u32
+
+If you look at the char primitive type reference 
+https://doc.rust-lang.org/std/primitive.char.html 
+
+You will see that what would in java be a primitive type with very little that can be done with it,
+
+has a miriad of methods that can be used.
+
+### Match is an expression - it is a "functional" case:
+
+```rust
+let the_char:char = match char::from_u32(i_code) {
+			Some(x) => x,
+			None => '·'
+		}; 
+```
+
+### Function pointers do exist.
+
+As we browse the primitive types standard library, we see that the function is a pointer. We can specify variables that are functions.
+
+
+### A tuple is a function signature without a function.
+
+let tup: (u32,i32) = (123,124)
+
+let (x,y) = tup;
+
+// x = 123, y = 124
+
+Tupple is also a sort of "array" : items can be accessed by index.
+
+assert! ( tup.0 == x) // true
+
+TUPLES can be heterogeneous. ARRAYS must be homogeneous.
+
+As all rust variables tuples and arrays are BOTH immutable unless explicitly set with the mut keyword.
+
+UNLIKE JAVA, where arrays are implicitly mutable and can't be ever locked, unless we wrap the array
+around a method that would return a "read-only" copy of the array.
+
+
