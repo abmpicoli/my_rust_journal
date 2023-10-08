@@ -548,9 +548,125 @@ assert! ( tup.0 == x) // true
 
 TUPLES can be heterogeneous. ARRAYS must be homogeneous.
 
-As all rust variables tuples and arrays are BOTH immutable unless explicitly set with the mut keyword.
+### As all rust variables tuples and arrays are BOTH immutable unless explicitly set with the mut keyword.
 
 UNLIKE JAVA, where arrays are implicitly mutable and can't be ever locked, unless we wrap the array
 around a method that would return a "read-only" copy of the array.
 
+### Composite types are LIMITED: tuple and array. DONE?
 
+
+### Statements vs expressions is a HUGE concept.
+
+At first glance, the talk about statements and expressions found in topic 3.5 in the rust language manual are somewhat moot.
+
+But then we see stuff like
+
+#### "`if` is an expression".
+
+POWERFUL!
+
+In java, if we want to make an assigment to a variable depending on a flag can be done either by a very lengthy if
+
+JAVA:
+```java
+
+int value;
+boolean condition = true;
+
+if(condition) { 
+   value = 3 ; 
+ }
+else {
+  value = 4;
+}
+```
+
+And the alternative syntax is the plain old confusing ? : statement
+
+`value = condition?3:4;`
+
+That will need to be refactore into the previous if if there is any more complex decision taking in the code.
+
+IN rust. Because if is an EXPRESSION, I can simply 
+
+`let value = if condition { 3 } else { 4 } `
+
+And if I have extra conditions, I can keep concatenating this, forever...
+
+`let value = if condition { if condition2 { 42 } else { 3} } else { 4} `
+
+And of course I can make this structured, multiline, simple to read.
+
+#### GUESS WHAT? LOOP is also an expression...
+
+```
+let result = loop {
+        counter += 1;
+
+        if counter == 10 {
+            break counter * 2;
+        }
+    };
+```
+BREAK can return an expression, making loop an expression as well.
+
+RUST: break labels must have a single quote
+```
+'outer: loop {
+   'inner: loop { 
+   ...
+	break 'outer;
+	...
+```
+
+#### LOOP can be a dynamic expression. WHILE can't . it returns always () .https://doc.rust-lang.org/std/keyword.while.html 
+
+
+#### FORS are iterator looping.. ALWAYS.
+
+in java we can do something like this : 
+for(int i=0; i < 100; ++i) ...
+
+
+or this:
+List<String> x = new ArrayList<>();
+....
+
+for( k : x ) // iterates over the items in the list.
+
+RUST ONLY CONTAINS THE LATTER: loop over an iterable thing.
+
+08/10/2023 - Understanding ownership
+====================================
+
+#### Rust deals with the heap in principle much alike java:
+
+Two variables that demand dynamic data will have the bulk content still going into the heap.
+
+let s1= String::from("Hello") => pointer + some metainfo goes to stack. "Hello" goes to the heap as a sequence of characters.
+let s2 = s1 => s2 pointer (pointing to s1 "Hello") + some metainfo goes to stack. 
+
+#### YOU CAN'T ASSIGN TWO VARIABLES TO THE SAME POINTER IN THE HEAP
+
+The latest assignment borrows the pointer making the previous variable no longer valid.
+
+So, for functions, you may add the function as a parameter AND THEN RETURN THE SAME VARIABLE to the caller, so the caller can 'take it back'.
+
+THAT IS WHY println! must not be a simple function! if I was to invoke a println function, I would need to invoke
+something like (pseudocode)
+
+let mut tup: (String,String) = ("Hello","World");
+
+// would have to do that to keep tup in my own scope. At the moment I place I call a function with heap parameters,
+// I lose them.
+
+
+tup=println("The value of {} is {}",tup);
+
+#### Any type can "bypass" borrowing by implementing the Copy trait (whatever that is): 
+This would make a copy of the variable before sending the function, passing the full content "by value".
+
+TO AVOID THAT IN FUNCTION CALLING, References are used. 
+
+> TODO: I have started a project to experiment on all this concepts, but haven't done anything yet.
