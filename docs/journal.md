@@ -647,7 +647,7 @@ Two variables that demand dynamic data will have the bulk content still going in
 let s1= String::from("Hello") => pointer + some metainfo goes to stack. "Hello" goes to the heap as a sequence of characters.
 let s2 = s1 => s2 pointer (pointing to s1 "Hello") + some metainfo goes to stack. 
 
-#### YOU CAN'T ASSIGN TWO VARIABLES TO THE SAME POINTER IN THE HEAP
+#### YOU CAN'T ASSIGN TWO VARIABLES TO THE SAME POINTER IN THE HEAP (EXCEPT in READ-ONLY ACCESS)
 
 The latest assignment borrows the pointer making the previous variable no longer valid.
 
@@ -670,3 +670,14 @@ This would make a copy of the variable before sending the function, passing the 
 TO AVOID THAT IN FUNCTION CALLING, References are used. 
 
 > TODO: I have started a project to experiment on all this concepts, but haven't done anything yet.
+
+A call by reference '&' can be used for READ-ONLY access to a variable.
+
+09/10/2023: Ownership experiments.
+==================================
+
+The project [borrow_experiment](/borrow_experiments) is a work in progress trying many stuff with borrowing and inferring types.
+
+From that we learned that "Hello" is not a string, but an '&str' . 
+
+There is more inside the code.
