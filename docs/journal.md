@@ -681,3 +681,25 @@ The project [borrow_experiment](/borrow_experiments) is a work in progress tryin
 From that we learned that "Hello" is not a string, but an '&str' . 
 
 There is more inside the code.
+
+#### If something is immutable in Rust, It *IS* immutable.
+
+The borrow checker makes sure that an immutable thing is KEPT as immutable, and can't be referenced later after change.
+
+```
+error[E0502]: cannot borrow `the_mutable_string` as mutable because it is also borrowed as immutable
+   --> src/main.rs:123:2
+    |
+122 |     let mutable_alias = &the_mutable_string ;
+    |                         ------------------- immutable borrow occurs here
+123 |     the_mutable_string.push_str("Olá!");
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ mutable borrow occurs here
+124 |     println!("the_mutable_string = {the_mutable_string} ; mutable_alias = {mutable_alias}");
+    |                                                                           --------------- immutable borrow later used here
+```
+
+10/10/2023: More ownership experiments - Structures
+===================================================
+
+The borrow checker experiment went to my satisfaction for the moment. Moving to next chapter.
+
