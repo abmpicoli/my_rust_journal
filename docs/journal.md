@@ -703,3 +703,27 @@ error[E0502]: cannot borrow `the_mutable_string` as mutable because it is also b
 
 The borrow checker experiment went to my satisfaction for the moment. Moving to next chapter.
 
+10/11/2023: A new update? 
+=========================
+
+Well... "just" discovered that the toolchain was updated on Oct/3/2023. 
+
+Now, let's go back to structs. I'm playing with the concept of structures with a probability game:
+
+This is common in multiple games and simulation scenarios: there is a probability of an event to occur, and then a 
+random event is chosen based on that probability table.
+
+So there can be a structure like this:
+
+|probability|event|
+|-------|-----|
+|0.01| "A whale falls from the sky and crashes over you. You lose (0-1000) hitpoints"|
+|5.00| "As you walk through the forest, you find a brand new sword and shield! "|
+|25.0| "A pack of giant rats attacks you. Prepare for an encounter!"|
+
+Probability is a number that shows the relative chance of that event occurring comparing to the others.
+
+That is, the chance of finding a sword and shield is (5.00 / 0.01 = 500 ) times more likely to happen than a 
+whale falling from the sky.
+
+This is what I've got so far. Tomorrow I will try to implement this with my current knowledge.
