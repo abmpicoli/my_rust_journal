@@ -742,3 +742,17 @@ In the code, I had an array of events, and I would use a for x in 0..events.len(
 the array, (making it mutable), but I've decided not to: the array have a map function, that
 returns an array transformed by a function.
 
+UPDATE: this commit fix all the issues and place some comments:
+
+General hints:
+
+* Use references for 'for loops'. Borrowship will take your variable and not return it in a for loop.
+
+  So:
+  `for f in some_var { // probably wrong: it will remove your variable and never return it.`
+  
+  `for f in &some_var { // good: it will keep the original reference after the loop is completed.`
+
+* REMEMBER: rust makes NO PROMOTIONS; There are no implicit return types, there are no implicit conversions from integer to floating.
+* RUST is dumb regarding deducting types: it will only detect them for the most simple of assignments. Make all types explicit.
+
