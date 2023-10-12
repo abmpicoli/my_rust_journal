@@ -727,3 +727,18 @@ That is, the chance of finding a sword and shield is (5.00 / 0.01 = 500 ) times 
 whale falling from the sky.
 
 This is what I've got so far. Tomorrow I will try to implement this with my current knowledge.
+
+Oct/12/2023: my initial attempt with structures.
+================================================
+
+I'm committing the initial code for my structure experiment. Given a probability array
+as input, A table containing odds of a specific event to happen is printed.
+
+This have not gone through the cargo run yet, so I will watch the fireworks! :) 
+
+### Immutability implies in making transformation functions.
+
+In the code, I had an array of events, and I would use a for x in 0..events.len() to change
+the array, (making it mutable), but I've decided not to: the array have a map function, that
+returns an array transformed by a function.
+
