@@ -3,20 +3,23 @@
 struct Event {
 
     odds: f64,
-    event: String,
+    text: String,
     min:f64,
     max:f64
   
 }
 
+impl Event {
+	
 // Can I do that? just specify the fields I want and leave the others out? 
 
-fn build_event(odds: f64, event: &str) -> Event {
-	Event {
-		odds,
-		event: String::from(event),
-		min:-1.0,
-		max:-1.0
+	fn new(odds: f64, text: &str) -> Self {
+		Self {
+			odds,
+			text: String::from(text),
+			min:-1.0,
+			max:-1.0
+		}
 	}
 }
 
@@ -41,9 +44,9 @@ fn build_event(odds: f64, event: &str) -> Event {
 //];
 fn main() {
     let the_events:[Event;3]  = [ 
-     build_event(0.01,"A whale falls from the sky and crashes over you."),
-	 build_event(5.0,"As you walk to the forest, you find a sword and shield!"),
-	 build_event(25.0,"A pack of giant rats attack you. Prepare for an encounter!")
+     Event::new(0.01,"A whale falls from the sky and crashes over you."),
+	 Event::new(5.0,"As you walk to the forest, you find a sword and shield!"),
+	 Event::new(25.0,"A pack of giant rats attack you. Prepare for an encounter!")
     ];
     let mut total_odds:f64=0.0;
 //...oh man, the borrowing is a pain...
@@ -66,8 +69,8 @@ fn main() {
 		let odds = f.odds;
 		let min = f.min;
 		let max = f.max;
-		let event = f.event;
-		println!("({odds}: {min} to {max}(excl) : {event }");
+		let text = f.text;
+		println!("({odds}: {min} to {max}(excl) : {text}");
 	}
     
 

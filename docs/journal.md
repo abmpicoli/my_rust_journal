@@ -756,3 +756,57 @@ General hints:
 * REMEMBER: rust makes NO PROMOTIONS; There are no implicit return types, there are no implicit conversions from integer to floating.
 * RUST is dumb regarding deducting types: it will only detect them for the most simple of assignments. Make all types explicit.
 
+Oct/13/2023: structs *are* classes... in a way.
+===============================================
+
+Considering that you can write code like this:
+
+```rust
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+impl Rectangle {
+    fn area(&self) -> u32 {
+        self.width * self.height
+    }
+}
+```
+
+all the elements are there: I have the data, and the methods I can use to work with that data.
+
+What remains to be seen is how to implement inheritance, polymorphism, etc. Smells that "traits" will do that.
+
+But even in chapter 5, there is this idea that I can make an implementation that returns "Self". That is, a "don't bother with the 
+class name, just do this."
+
+```
+impl Event {
+
+	fn new(odds: f64, text: &str) -> Self {
+		Self {
+			odds,
+			text: String::from(text),
+			min:-1.0,
+			max:-1.0
+		}
+	}
+
+}
+```
+
+Why would the language allow that concept, if not to implement some sort of polymorphism, where I can run this new thing to
+"anything that makes noise", like in the traditional polymorphism examples?
+
+Another question is "what about public , protected, private?"
+
+
+
+Well, let's go to chapter 6.
+
+### enum DEFINITELY is not our java enum.
+
+https://www.youtube.com/watch?v=ybrQvs4x0Ps the billion dollar mistake.
+
+https://en.wikipedia.org/wiki/Tony_Hoare.
