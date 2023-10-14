@@ -810,3 +810,17 @@ Well, let's go to chapter 6.
 https://www.youtube.com/watch?v=ybrQvs4x0Ps the billion dollar mistake.
 
 https://en.wikipedia.org/wiki/Tony_Hoare.
+
+
+Oct/14/2023: some hangs trying to work with the Option enum:
+============================================================
+
+Today I have finished watching the Tony Hoare meeting about the billion dollar mistake.
+
+"The idea of using "proof" : https://youtu.be/ybrQvs4x0Ps?t=1900 appears in the middle,
+where the guy seems to talk about Test Driven Development
+
+The project ch6_enums is a work in progress for an "adventure like" game.
+
+But I'm dealing with some hangs regarding the use of Option with the function pointer type. WIP.
+
