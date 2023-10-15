@@ -824,3 +824,13 @@ The project ch6_enums is a work in progress for an "adventure like" game.
 
 But I'm dealing with some hangs regarding the use of Option with the function pointer type. WIP.
 
+Oct/15/2023: let me just move on:
+=================================
+
+The ch6 project clearly seems to show that I still don't know enough to make the "adventure game".
+
+There are a lot of things that make me suspect the borrow checker will vanish with the data and not use it.
+
+From chapter 7: "A package can contain multiple binary crates and optionally one library crate" ? 
+
+The exercise for chapter 7 : turn the ch6 project into a functional project, where each scene and options are inside a module.
