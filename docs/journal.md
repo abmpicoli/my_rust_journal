@@ -891,5 +891,8 @@ fn apply(Scene,Player) -> (Scene,Player)
 
 fn describe(Player) -> String : describes the scene to the player.
 
+NOTE: I'm also looking at chapter 11 (tests) : I can't possibly go on without some test driven development :D 
 
+Day close: as expected, even the simplest code has lots of fireworks :( 
 
+Committing code at state: it is not even compiling yet.
