@@ -834,3 +834,62 @@ There are a lot of things that make me suspect the borrow checker will vanish wi
 From chapter 7: "A package can contain multiple binary crates and optionally one library crate" ? 
 
 The exercise for chapter 7 : turn the ch6 project into a functional project, where each scene and options are inside a module.
+
+Oct/16/2023: Rust pushes functional. Because mutable is hard to handle.
+=======================================================================
+
+In chapter 6 exercise we got a lot of trouble with mutable variables (choosing lifetimes and such).
+
+But the point is that, at least for this adventure example, we don't need it: I can use "normal"
+variables and design the application to be heavily functional.
+
+Because _functions appear not to be affected by the borrow checker_ . After all they are code: intrinsically static
+discovered at compile time. Right? Right??
+
+Hm... demands an experiment.
+
+So, let's think about the structures.
+
+The game is a simple text-based adventure. 
+
+All the player can do is to choose between up to 3 choices.
+
+The player is in a scene, that describes what the player is seeing. What he sees will depend on the player history.
+
+The player has Tags that shows details about the game progress. 
+
+For example, on chapter 6, the player starts with the NAKED tag.
+
+When we talk about choices, I have two concerns:
+
+1) Is the choice provided applicable based on the scene and player? 
+2) Once we apply the choice, we provide player and scene, and receive a new player and scene.
+
+So a player has tags. To make it simple, tags will be simple strings, separated by semicolons;
+
+Some helper methods may be used to ask if a player has a tag has_tag
+
+Remove a tag remove_tag; 
+
+and add_tag; 
+
+a pretty_print tag will be used to "pretty print" the possessions. In the beginning it will be only a simple string.
+
+
+
+The scene will have 
+
+describe(&Player) : providing descriptions based on player tags.
+
+choices: an array of 3 Choice elements.
+
+A choice will have:
+
+fn is_applicable(Scene,Player) -> boolean : 
+
+fn apply(Scene,Player) -> (Scene,Player) 
+
+fn describe(Player) -> String : describes the scene to the player.
+
+
+
