@@ -896,3 +896,57 @@ NOTE: I'm also looking at chapter 11 (tests) : I can't possibly go on without so
 Day close: as expected, even the simplest code has lots of fireworks :( 
 
 Committing code at state: it is not even compiling yet.
+
+Oct/17/2023: Rust **IS** A **PAIN** IN THE **ASSSSSSS!!!!!!!!!!!!!!!!**
+=======================================================================
+
+In any language in the WORLD... 
+
+return a string concatenated with other string would be a simple concatenation operation. One liner.
+
+So, this function which is a one liner in java, can be written in rust, right? RIGHT??
+
+```
+pub fn format_tag(tag:&str) {
+	"♦ " + tag + "\n" 
+	
+}
+```
+
+NOT SO WITH RUST:
+
+
+abpicoli@DESKTOP-EPFPMPH:/mnt/e/projetos/my_rust_journal/ch7_modules$ cargo test player.rs
+   Compiling ch7_modules v0.1.0 (/mnt/e/projetos/my_rust_journal/ch7_modules)
+error[E0369]: cannot add `&str` to `&str`
+  --> src/player.rs:13:7
+   |
+13 |     "♦ " + tag + "\n"
+   |     ---- ^ --- &str
+   |     |    |
+   |     |    `+` cannot be used to concatenate two `&str` strings
+   |     &str
+   |
+   = note: string concatenation requires an owned `String` on the left
+help: create an owned `String` from a string reference
+   |
+13 |     "♦ ".to_owned() + tag + "\n"
+   |         +++++++++++
+
+So, let's satisfy the rust compiler. Let's make a String::from in the first content:
+
+```
+pub fn format_tag(tag:&str)->String {
+	String::from("♦ ") + tag + "\n" 
+	
+}
+```
+
+This have returned a string. And as consequences, the raw data from the string is useless for many operations, such as an replace operation.
+
+So, all over the code, I need to do stunts like this:
+
+format_tag(NAKED).to_owned()+&format_tag(RAGGED_CLOTHING)
+
+
+Well... tomorrow I will work with the other modules.
