@@ -10,7 +10,9 @@ pub struct Player {
 }
 
 pub fn format_tag(tag:&str)->String{
-	let x = String::from("♦ ") + tag + "\n" ;
+	let mut x = String::from("♦ ");
+	x.push_str(tag);
+	x.push_str("\n");
 	x
 }
 
@@ -24,10 +26,9 @@ impl Player {
 	
 	pub fn add_tag(self,tag:&str) -> Player {
 		if ! self.contains_tag(tag) {
-			let mut x:String = self.tags.clone();
-			x.push_str(&format_tag(tag));
+			let x = self.tags.clone() + &format_tag(tag);
 			return Player {
-				tags:x.clone()
+				tags:x
 			}
 		}
 		self

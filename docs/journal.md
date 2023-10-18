@@ -950,3 +950,92 @@ format_tag(NAKED).to_owned()+&format_tag(RAGGED_CLOTHING)
 
 
 Well... tomorrow I will work with the other modules.
+
+Oct/18/2023: 
+============
+
+Hm... yesterday I did this stunt. Probably because I was crazy with the str x string confusion.
+
+```
+	pub fn add_tag(self,tag:&str) -> Player {
+		if ! self.contains_tag(tag) {
+			let mut x:String = self.tags.clone();
+			x.push_str(&format_tag(tag));
+			return Player {
+				tags:x.clone()
+			}
+		}
+		self
+	}
+```
+
+But... I think this is legal, and much cleaner, right?
+
+``` 
+	pub fn add_tag(self,tag:&str) -> Player {
+		if ! self.contains_tag(tag) {
+			let x = self.tags.clone() + &format_tag(tag);
+			return Player {
+				tags:x
+			}
+		}
+		self
+	}
+```
+
+What does the operator "add" does to a string? 
+
+And Rust documentation *does* have the answer: https://doc.rust-lang.org/std/string/struct.String.html#impl-Add%3C%26str%3E-for-String 
+
+The problem with concatenation is that it will always "consume" the left operator.
+x + y = x.add(y) , which implies a call to x(self,y) . 
+
+Well... just compiled the change in player.rs and... no issues. Ok. 
+
+AND... in the end the big problem is that I'm probably doing things *the complicated way*.
+
+I bet the macro concat! https://doc.rust-lang.org/stable/std/macro.concat.html will be much more efficient,
+
+and simpler to use.
+
+Let's try it:
+
+from 
+```
+pub fn format_tag(tag:&str)->String{
+	let x = String::from("♦ ") + tag + "\n" ;
+	x
+}
+```
+to 
+```
+pub fn format_tag(tag:&str)->String{
+	String::from(concat!("♦ ",tag,"\n"))
+}
+```
+
+There is no happiness :( 
+
+```
+error: expected a literal
+  --> src/player.rs:13:28
+   |
+13 |     String::from(concat!("♦ ",tag,"\n"))
+   |                               ^^^
+   |
+   = note: only literals (like `"foo"`, `-42` and `3.14`) can be passed to `concat!()`
+
+e
+```
+
+and guess what what the add operator is , behind the covers??
+
+```
+https://doc.rust-lang.org/src/alloc/string.rs.html#2265
+ fn add(mut self, other: &str) -> String {
+        self.push_str(other);
+        self
+    }
+```
+
+So, specially for multiple c, it may be better to simply push_str. Avoid a stack call 
