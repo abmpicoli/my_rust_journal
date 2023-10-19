@@ -1,6 +1,7 @@
 
 pub const NAKED:&str="You are naked";
 pub const RAGGED_CLOTHING:&str ="You wear a ragged shirt and holey pants";
+pub const STRAW_CLOTHING:&str="You wear a sorry excuse of clothing made purely of woven straws."
 
 
 pub struct Player {

@@ -1057,6 +1057,37 @@ fn describe(Player) -> String : describes the choice to the player.
 
 The choice seems to be a set of functions, right? Smells like these "Traits" concept?
 
-Well... let's just try making the structure.
+Well... let's just try making the structure, made of function pointers.
 
 Ans THIS is the suspense point: I'm committing this code. Will it compile?
+
+```
+abpicoli@DESKTOP-EPFPMPH:/mnt/e/projetos/my_rust_journal/ch7_modules$ cargo run
+   Compiling ch7_modules v0.1.0 (/mnt/e/projetos/my_rust_journal/ch7_modules)
+warning: fields `is_applicable`, `apply`, and `describe` are never read
+ --> src/choice.rs:6:2
+  |
+4 | pub struct Choice {
+  |            ------ fields in this struct
+5 |
+6 |     is_applicable: fn (&Scene,&Player) -> bool,
+  |     ^^^^^^^^^^^^^
+7 |     apply: fn(Scene,Player)->(Scene,Player),
+  |     ^^^^^
+8 |     describe: fn(&Player) -> String
+  |     ^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: `ch7_modules` (lib) generated 1 warning
+    Finished dev [unoptimized + debuginfo] target(s) in 3.51s
+     Running `target/debug/ch7_modules`
+Hello, world!
+```
+
+Yep it did.
+
+
+Now, how do I create multiple choices? Probably with a constructor... Because I don't think I can use "const" for declaring a choice.
+
+Well, more for tomorrow.
