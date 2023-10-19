@@ -1038,4 +1038,25 @@ https://doc.rust-lang.org/src/alloc/string.rs.html#2265
     }
 ```
 
-So, specially for multiple c, it may be better to simply push_str. Avoid a stack call 
+So, specially for multiple c, it may be better to simply push_str. Avoid a stack call
+
+Oct/19/2023
+===========
+
+I'm working on the choice.rs today. Because a scene needs a choice.
+
+A choice 
+
+A choice will have:
+
+fn is_applicable(Scene,Player) -> boolean : 
+
+fn apply(Scene,Player) -> (Scene,Player) 
+
+fn describe(Player) -> String : describes the choice to the player.
+
+The choice seems to be a set of functions, right? Smells like these "Traits" concept?
+
+Well... let's just try making the structure.
+
+Ans THIS is the suspense point: I'm committing this code. Will it compile?
