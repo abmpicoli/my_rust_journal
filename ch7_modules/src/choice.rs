@@ -1,6 +1,9 @@
 use crate::player::*;
 use crate::scene::*;
 
+
+pub const MAKE_MAKESHIFT_CLOTHES_DESCRIPTION:&str="Use straw , reed, whatever you can find to make something to cover your nakedness.";
+
 pub struct Choice {
 	
 	is_applicable: fn (&Scene,&Player) -> bool,
@@ -9,24 +12,32 @@ pub struct Choice {
 	
 }
 
-pub fn make_makeshift_clothes_with_straw() -> Choice {
+fn make_makeshift_is_applicable(s:&Scene,p:&Player)-> bool {
 	
-	return Choice {
-		is_applicable: fn(s:&Scene,p:&Player)-> bool {
-			
-			p.contains_tag(NAKED)
-			
-		},
-		apply: fn(Scene,Player) -> (Scene,Player) {
-			(Scene,Player.remove_tag(player::NAKED).add_tag(player::STRAW_CLOTHING))
-		},
-		describe: fn(&Player) -> String {
-			String::from("Use straw , reed
-		}
-		
-	}
+	p.contains_tag(NAKED)
 	
 }
+
+fn make_makeship_apply(s:Scene,p:Player) -> (Scene,Player) {
+	(s,p.remove_tag(NAKED).add_tag(STRAW_CLOTHING))
+	
+}
+
+fn make_makeship_describe(p:&Player) -> String {
+	
+	String::from(MAKE_MAKESHIFT_CLOTHES_DESCRIPTION)
+}
+
+pub fn make_makeshift_clothes_with_straw() -> Choice {
+	 Choice {
+		is_applicable: self::make_makeshift_is_applicable,
+		apply: self::make_makeship_apply,
+		describe: self::make_makeship_describe
+	}
+		
+}
+	
+
 
 
 
@@ -34,19 +45,18 @@ pub fn make_makeshift_clothes_with_straw() -> Choice {
 mod tests {
 	use crate::player::*;	
 	use crate::scene::*;
+	use crate::choice::*;
 	#[test]
 	fn test_tags() {
-		let x = Player::new();
-		let x = x.add_tag(NAKED);
-		let Choice = make_makeshift_clothes_with_straw();
-		assert!(x.contains_tag(NAKED),"The player should have the naked tag now {}",x.tags);
-		let x = x.add_tag(NAKED);
-		assert_eq!(x.tags,format_tag(NAKED),"adding multiple tags the same tag should provide only one tag. It is providing instead {}",x.tags);
-		let x = x.remove_tag(NAKED);
-		assert_eq!(x.tags,"","removing the only tag should provide an empty string. Instead it was {}",x.tags);
-		let x = x.add_tag(NAKED);
-		let x = x.add_tag(RAGGED_CLOTHING);
-		assert_eq!(x.tags,format_tag(NAKED).to_owned()+&format_tag(RAGGED_CLOTHING));
+		let player = Player::new();
+		let player = player.add_tag(NAKED);
+		let scene = Scene { } ;
+		let choice = make_makeshift_clothes_with_straw();
+		assert_eq!(MAKE_MAKESHIFT_CLOTHES_DESCRIPTION,(choice.describe)(&player),"The description should match the static value");
+		assert!((choice.is_applicable)(&scene,&player));
+		let (scene,player) = (choice.apply)(scene,player);
+		assert!(player.contains_tag(STRAW_CLOTHING),"the scene effect should have been applied");
+		assert!(! (choice.is_applicable)(&scene,&player),"Now that the player is no longer naked, the choice is no longer applicable");
+		
 	}
-	
 }

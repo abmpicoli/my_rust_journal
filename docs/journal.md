@@ -1091,3 +1091,19 @@ Yep it did.
 Now, how do I create multiple choices? Probably with a constructor... Because I don't think I can use "const" for declaring a choice.
 
 Well, more for tomorrow.
+
+Oct/20/2023:
+============
+
+Well... the idea of making a struct containing pointers to functions *works*... barely and awkwardly.
+
+Sure, you can specify a struct containing pointers to functions.
+
+But the function itself is hardcoded at compile time, so you can't create a struct with some "anonymous definition". You must 
+explicitly point to an existing function in code, by name.
+
+Also, invoking this function pointed by the struct is also awkward, having to place the field inside parenthesis ...
+
+So, yes. Let's move to next chapter and skip this ch7 project.
+
+
