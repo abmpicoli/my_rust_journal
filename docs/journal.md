@@ -1106,4 +1106,33 @@ Also, invoking this function pointed by the struct is also awkward, having to pl
 
 So, yes. Let's move to next chapter and skip this ch7 project.
 
+Oct/21/2023:
+============
 
+Reading chapter 8 about collections.
+
+And it seems the borrow checker attacks again...
+
+```
+let mut v = vec![1, 2, 3, 4, 5];
+
+    let first = &v[0];
+
+    v.push(6); // BOOOM!!!!
+
+    println!("The first element is: {first}");
+```
+
+Because of the borrow checker system, vectors are *implicitly synchronized*! So the stunts we must
+do with java when having a vector changed in multiple threads (Concurrent modification exception)
+will happen at the very beginning of an operation...
+
+Which means I must for sure use something else to allow multiple threads to modify the same vector without giving 
+a compile time error, right??
+
+More to see when we try async operations later.
+
+**BIG TAKEAWAY: STRINGS ARE COMPLICATED** : Strings are a vector of characters, but to support all internationalization,
+diacritics, chinese characters, and so on, you can only iterate through the string, and not access a specific character by index.
+
+FOR TOMORROW: make the tests for the exercise at the summary of chapter 8
