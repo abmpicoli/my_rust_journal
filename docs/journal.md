@@ -1136,3 +1136,17 @@ More to see when we try async operations later.
 diacritics, chinese characters, and so on, you can only iterate through the string, and not access a specific character by index.
 
 FOR TOMORROW: make the tests for the exercise at the summary of chapter 8
+
+Oct/23/2023:
+============
+
+Did take a look into the "Rust Drama". 
+
+Starting looking into the first exercise of chapter 8
+
+Given a list of integers, use a vector and return the median (when sorted, the value in the middle position) and mode (the value that occurs most often; a hash map will be helpful here) of the list.
+
+The list of integers will be provided by user input. A line containing numbers separated by spaces.
+
+
+
