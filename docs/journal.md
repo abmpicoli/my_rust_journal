@@ -1148,5 +1148,14 @@ Given a list of integers, use a vector and return the median (when sorted, the v
 
 The list of integers will be provided by user input. A line containing numbers separated by spaces.
 
+The project ch8_1_median contains the initial output of the exercise. 
+
+Oct/24/2023: 
+============
+
+Made some strides in ch_8_1. Decided to order the steps in the main method as functions so they can be tested in isolation with multiple use cases.
+
+This manual input is tedious.
+
 
 
