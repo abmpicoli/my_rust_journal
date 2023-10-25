@@ -36,6 +36,18 @@ pub fn string_to_vector(input:&String) -> Vec<u32> {
 	the_vector
 }
 
+pub fn median(the_vector:Vec<u32>) -> (Vec<u32>,f64) {
+	
+	let vec_len = the_vector.len();
+	let is_odd = vec_len % 2 == 1 ;
+	
+	if is_odd {
+		let median:f64 =  the_vector[vec_len / 2 ].into();
+		return (the_vector,median );
+	} 
+	(the_vector,42.0)
+}
+
 fn main() {
     
 	let mut user_input=String::new();
@@ -52,5 +64,20 @@ fn main() {
 	println!("The sorted vector.");
 	print_vector(&the_vector);
 		
+}
+
+#[cfg(test)]
+mod tests {
+
+	use crate::*;	
+	#[test]
+	fn test_median() {
+		let mut the_vector:Vec<u32>=vec![1,2,3,4,5];
+		let mut the_median=0.0;
+		(the_vector,the_median) = median(the_vector);
+		
+		assert_eq!(3.0,the_median,"The median of 1,2,3,4,5 should be the middle value, 3");
+	}
+
 }
 

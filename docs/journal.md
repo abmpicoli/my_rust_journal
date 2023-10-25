@@ -1157,5 +1157,34 @@ Made some strides in ch_8_1. Decided to order the steps in the main method as fu
 
 This manual input is tedious.
 
+Oct/25/2023:
+============
 
+Ended up looking at rust forums. So, yes, rust is much more like C++ than anything else regarding portability.
+
+Just discovered the magical into() method that converts one type to another implicitly.
+
+In the rust library there is this concept of "blanket implementations". Need to see that later.
+
+First median test working.
+
+Borrow check is a b*tch: 
+
+This doesn't work, because x was borrowed when placed into the first item.
+
+(x,y)=(x,x[y].into())
+
+```
+  --> src/main.rs:45:23
+   |
+39 | pub fn median(the_vector:Vec<u32>) -> (Vec<u32>,f64) {
+   |               ---------- move occurs because `the_vector` has type `Vec<u32>`, which does not implement the `Copy` trait
+...
+45 |         return (the_vector, the_vector[vec_len / 2 ].into());
+   |                 ----------  ^^^^^^^^^^ value borrowed here after move
+   |                 |
+   |                 value moved here
+   |
+```
+The solution? Assign the expression in the step before into a variable.
 
