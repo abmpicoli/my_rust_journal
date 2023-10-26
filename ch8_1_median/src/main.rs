@@ -36,16 +36,20 @@ pub fn string_to_vector(input:&String) -> Vec<u32> {
 	the_vector
 }
 
-pub fn median(the_vector:Vec<u32>) -> (Vec<u32>,f64) {
-	
+pub fn median(the_vector:&mut Vec<u32>) -> f64 {
+	the_vector.sort_unstable();
 	let vec_len = the_vector.len();
 	let is_odd = vec_len % 2 == 1 ;
 	
 	if is_odd {
 		let median:f64 =  the_vector[vec_len / 2 ].into();
-		return (the_vector,median );
+		return median;
 	} 
-	(the_vector,42.0)
+	let middle = vec_len / 2; 
+	let middle_right:f64 = the_vector[middle].into();
+	let middle_left:f64 = the_vector[middle-1].into();
+	let median:f64 = ( middle_left + middle_right)/2.0;
+	median
 }
 
 fn main() {
@@ -60,10 +64,9 @@ fn main() {
 	
 	println!("You have chosen the numbers: ");
 	print_vector(&the_vector);
-	the_vector.sort_unstable();
-	println!("The sorted vector.");
-	print_vector(&the_vector);
-		
+	let mut the_median = -1.0;
+	the_median = median(&mut the_vector);
+	println!("Median = {the_median}");
 }
 
 #[cfg(test)]
@@ -74,10 +77,17 @@ mod tests {
 	fn test_median() {
 		let mut the_vector:Vec<u32>=vec![1,2,3,4,5];
 		let mut the_median=0.0;
-		(the_vector,the_median) = median(the_vector);
+		the_median = median(&mut the_vector);
 		
 		assert_eq!(3.0,the_median,"The median of 1,2,3,4,5 should be the middle value, 3");
+		
+		the_vector = vec![1,2,3,4,5,6];
+		the_median = median(&mut the_vector);
+		assert_eq!(3.5,the_median,"The median of 1,2,3,4,5,6 should be the average of the central values: (3+4)/2 = 3.5");
+		
+		the_vector = vec![1,4,5,6,3,2];
+		the_median = median(&mut the_vector);
+		assert_eq!(3.5,the_median,"The median of 1,2,3,4,5,6, even if out of order, should be the average of the central values: (3+4)/2 = 3.5");
 	}
-
 }
 

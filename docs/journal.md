@@ -1188,3 +1188,32 @@ This doesn't work, because x was borrowed when placed into the first item.
 ```
 The solution? Assign the expression in the step before into a variable.
 
+Oct/26/2023:
+============
+
+Keep working on the chapter 8: median.
+
+A reinforcement on the mut keyword: the mut keyword declares INTENT. It says *i want to change a variable*.
+
+Because of that it makes sense in variable declarations and function declarations. 
+
+It doesn't make sense on function results, because what people want to do with the outcome of a function
+is out of scope of the function.
+
+Today I had to review once more chapter 4.
+
+If you want a complex type to mutate in content inside the code, you must specify that the parameter is a mutable reference (&mut) 
+and then specify when calling the function that you are passing a mutable reference to the variable.
+
+So...
+
+fn median(the_vector: **&mut** Vec<u32>) -> f64 {
+  the_vector.sort_unstable(); // a mutable reference can be referred directly inside the function. No "&" or "*".
+}
+
+...
+
+x : mut Vec<u32>=vec![1,2,3,4,5];
+
+let the_median = median( **&mut** x)
+
