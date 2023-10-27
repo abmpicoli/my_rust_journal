@@ -1220,3 +1220,15 @@ let the_median = median( **&mut** x)
 Oct/27/2023:
 ============
 
+Completed exercise 8.1 - mode / median. 
+
+Starting exercise 8.2 - piglatin
+
+Tried to find a library to check if a vowel is such in romance languages. Couldn't find any implementation that has
+an actually exhaustive value. So I will keep it simple, and only consider vowels "AEIOUaeiou"
+
+Rust concerns with internationalization are a bitch .
+
+char.to_lowercase is not a single char! It is a lowercase structure, that may contain more than one character. Crazy! 
+
+How I miss 1980s old 127 characters ascii :D .
