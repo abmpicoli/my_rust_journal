@@ -1,6 +1,6 @@
 use std::io::stdin;
 
-fn pig_latin(input:&str) -> &str {
+fn pig_latin(input:&str) -> String {
 	
 	let mut output:String = String::new();
 	let mut word:String=String::with_capacity(15);
@@ -12,11 +12,12 @@ fn pig_latin(input:&str) -> &str {
 		if x.is_alphabetic() {
 			if ending.is_empty() {
 				let lower_char = x.to_lowercase().to_string();
+				let lower_char = lower_char.as_str();
 				let first_char = match lower_char { 
 				
-					'a' | 'e' | 'i' | 'o' | 'u' => {
+					"a" | "e" | "i" | "o" | "u" => {
 						word.push(x);
-						'h'
+						"h"
 					}
 					,
 					_ => {
@@ -26,11 +27,13 @@ fn pig_latin(input:&str) -> &str {
 					
 				
 				};
-				ending.push(first_char);
+				ending.push_str(first_char);
 				ending.push_str("ay");
 			} else {
 				if force_uppercase {
-					word.push_str(x.to_uppercase().to_string());
+					let temp = x.to_uppercase().to_string();
+					let temp = temp.as_str();
+					word.push_str(temp);
 					force_uppercase = false;
 				} else {
 					word.push(x);
@@ -39,8 +42,8 @@ fn pig_latin(input:&str) -> &str {
 			
 		} else {
 			if ! word.is_empty() {
-				output.push_str(word);
-				output.push_str(ending);
+				output.push_str(&word);
+				output.push_str(&ending);
 				word.clear();
 				ending.clear();
 			}
@@ -48,10 +51,9 @@ fn pig_latin(input:&str) -> &str {
 		}
 	
 	}
-	output.push(word);
-	output.push(ending);
-	
-	return output.as_str();
+	output.push_str(&word);
+	output.push_str(&ending);
+	output
 	
 }
 
@@ -62,6 +64,7 @@ fn main() {
 	println!("Piglatin translator: write a phrase to be converted into piglatin");
 	_ = stdin().read_line(&mut user_input);
 	
+	println!(">{}",pig_latin(&user_input));
 	
 }
 
@@ -75,9 +78,9 @@ mod tests {
 	fn test_pig_latin() {
 		
 		
-		assert_eq!("Hetay_uickqay rownbay oxfay umpsjay overhay hetay azylay ogday",pig_latin("The_quick brown fox jumps over the lazy dog"));
-		assert_eq!("Hohay! Ueqay iaday alavilhosomay!",pig_latin("Oh! Que dia malavilhoso!"));
-		assert_eq!("Ehay aihay eivay! Elezabay??","E ai vei! Beleza??");
+		assert_eq!("Hetay_uickqay rownbay oxfay umpsjay overhay hetay azylay ogday",&pig_latin("The_quick brown fox jumps over the lazy dog"));
+		assert_eq!("Ohhay! Ueqay iaday alavilhosomay!",&pig_latin("Oh! Que dia malavilhoso!"));
+		assert_eq!("Ehay aihay eivay! Elezabay??",&pig_latin("E ai vei! Beleza??"));
 		
 		
 	}

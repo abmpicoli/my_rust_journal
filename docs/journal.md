@@ -1232,3 +1232,29 @@ Rust concerns with internationalization are a bitch .
 char.to_lowercase is not a single char! It is a lowercase structure, that may contain more than one character. Crazy! 
 
 How I miss 1980s old 127 characters ascii :D .
+
+Oct/28/2023:
+============
+
+How to run the debugger for tests (using Windows Ubuntu WSL).
+
+1) make sure you have gdb installed. (sudo apt-get update ; sudo apt-get gdb )
+
+2) the program rust-gdb allows to debug source code. The program to use to debug tests is `rust-gdb`.
+
+The test output will show a line containing the binary that failed.
+
+```
+     Running unittests src/main.rs (target/debug/deps/ch8_2_piglatin-03717bc444e3dfba)
+```
+
+Once it's found, you can start rust-gdb with that file.
+
+```
+rust-gdb target/debug/deps/ch8_2_piglatin-03717bc444e3dfba
+```
+
+
+Borrow checkers are a pain in the ass! Again.
+
+
