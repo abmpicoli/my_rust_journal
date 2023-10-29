@@ -1257,4 +1257,50 @@ rust-gdb target/debug/deps/ch8_2_piglatin-03717bc444e3dfba
 
 Borrow checkers are a pain in the ass! Again.
 
+Oct/29/2023:
+============
 
+Work on exercise 8.3
+
+> Using a hash map and vectors, create a text interface to allow a user to add employee names to a department in a company. 
+> For example, “Add Sally to Engineering” or “Add Amir to Sales.” 
+> Then let the user retrieve a list of all people in a department or all people in the company by department, sorted alphabetically.
+
+Well... it make sense to make a structure, right?
+
+{ employee_id , department_id }
+
+{ id , department } to have a list of departments.
+
+{ id , employee } to have a list of employees.
+
+So the user will have the following options:
+
+`add [new] "<<employee>>" to [new] "<<department>>"` add an (optionally new) employee to an (optionally new) department.
+
+Response: employee X (id) was added to depertment Y (id)
+
+`remove <<employee>>`
+`remove <<department>>`
+`list <<employee>> [ by_id ]`
+`list <<department>> [ by_id ]` : list all departments in alphabetical order (or by id , if "by_id" is set ).`
+
+The code will have a lexer to parse the text response.
+
+I will start slow. With the lexer.
+
+there will be a command structure:
+
+{ 
+
+	enum operation {
+		add(bool new_employee, employee,bool new_department,department) , remove(target,name) , list(target,by_id)
+	}
+	
+	enum target {
+		employee , department
+	}
+	
+}
+
+It's sunday. let's leave for tomorrow.
