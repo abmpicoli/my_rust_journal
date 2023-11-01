@@ -401,7 +401,7 @@ loop {
 Oct/6/2023
 ==========
 
-Rust = Java with types: types must be known at compile type.
+Rust is similar to Java regarding types in the concept that types must be known at compile type.
 
 
 A string parse method has this crazy signature on rust: ```pub fn parse<F>(&self) -> Result<F, <F as FromStr>::Err>where```
@@ -1317,3 +1317,41 @@ Oct/30/2023:
 ============
 
 Today I did review this test, and translated some portuguese notes into english. All english now.
+
+I've also added the project 8_3_human_resources. But it is empty right now.
+
+Oct/31/2023:
+============
+
+I will work with the "database module" today.
+
+Nov/1st/2023:
+=============
+
+Interesting issue found today:
+
+```
+abpicoli@DESKTOP-EPFPMPH:/mnt/e/projetos/my_rust_journal/ch8_3_human_resources$ cargo test
+error: failed to parse manifest at `/mnt/e/projetos/my_rust_journal/Cargo.toml`
+
+Caused by:
+  no targets specified in the manifest
+  either src/lib.rs, src/main.rs, a [lib] section, or [[bin]] section must be present
+abpicoli@DESKTOP-EPFPMPH:/mnt/e/projetos/my_rust_journal/ch8_3_human_resources$
+```
+
+THe files mentioned are there 
+
+```
+abpicoli@DESKTOP-EPFPMPH:/mnt/e/projetos/my_rust_journal/ch8_3_human_resources$ find . -type f
+./Cargo.toml
+./src/database.rs
+./src/lib.rs
+./src/main.rs
+abpicoli@DESKTOP-EPFPMPH:/mnt/e/projetos/my_rust_journal/ch8_3_human_resources$
+```
+
+It seems that Cargo looks in the parent directory of the current project. In my case, the parent did have a ./Cargo.toml file, and it was complaining about non-existing targets.
+
+I've opened a forum question to discuss this issue https://users.rust-lang.org/t/what-is-the-correlation-between-two-cargo-toml-in-the-file-hierarchy/101933/5
+

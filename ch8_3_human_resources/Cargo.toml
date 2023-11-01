@@ -1,3 +1,4 @@
+[workspace]
 [package]
 name = "ch8_3_human_resources"
 version = "0.1.0"
