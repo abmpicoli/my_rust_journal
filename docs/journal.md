@@ -1355,3 +1355,30 @@ It seems that Cargo looks in the parent directory of the current project. In my 
 
 I've opened a forum question to discuss this issue https://users.rust-lang.org/t/what-is-the-correlation-between-two-cargo-toml-in-the-file-hierarchy/101933/5
 
+The quick solution is to make sure that the cargo.toml has the `[workspace]` tag 
+so the application is not considered a component of a bigger one.
+
+Nov/3rd/2023:
+=============
+
+As I'm working in the database.rs, I've found this. I did see it before... 
+
+```
+abpicoli@DESKTOP-EPFPMPH:/mnt/e/projetos/my_rust_journal/ch8_3_human_resources$ cargo test database.rs
+   Compiling ch8_3_human_resources v0.1.0 (/mnt/e/projetos/my_rust_journal/ch8_3_human_resources)
+error[E0106]: missing lifetime specifier
+ --> src/database.rs:9:19
+  |
+9 |     employees: Table<&str>,
+  |                      ^ expected named lifetime parameter
+  |
+help: consider introducing a named lifetime parameter
+  |
+7 ~ struct Database<'a> {
+8 |
+9 ~     employees: Table<&'a str>,
+  |
+```
+
+I'm going to switch to chapter 10, that explains lifetimes.
+

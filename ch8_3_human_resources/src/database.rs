@@ -7,10 +7,8 @@ const DUPLICATED_ROW="Duplicated row: there is already a {} with this {}" ;
 struct Database {
 
 	employees: Table<&str>,
-	departents: Table<&str>,
+	departments: Table<&str>,
 	employee_vs_department: Table<(u64,u64)>,
-	
-
 }
 
 struct Row<T> {
@@ -44,30 +42,30 @@ impl<T> Table<T> {
 		
 	}
 	
-	fn insert(name: T) -> Result<Row<T>,&str> { 
+	fn insert(&self,name: T) -> Result<Row<T>,&str> { 
 	
 		Err("boom!")
 	
 	}
 	
 	// dele
-	fn update() -> Result<Row<T>,&str> {
+	fn update(&self) -> Result<Row<T>,&str> {
 		Err("boom!")
 	}
 	
 	// delete a row by name
-	fn delete(row: T ) -> Result<u64,&str> {
+	fn delete_by_data(&self,row: T ) -> Result<u64,&str> {
 		Err("boom!")
 		
 	}
 	
-	fn delete(id: u64) -> Result<u64,&str> {
+	fn delete_by_id(&self,id: u64) -> Result<u64,&str> {
 		Err("boom!")
 		
 	}
 	
 	// find a row with the provided name.
-	fn find(name: T) -> Option<Row> {
+	fn find(&self,name: T) -> Option<Row<T>> {
 		None
 	}
 	
@@ -78,7 +76,7 @@ mod tests {
 	use crate::database::*;	
 	#[test]
 	fn test_table() {
-		let mut the_table = Table::new();
+		let mut the_table: Table<&str> = Table::new();
 		the_table.insert("Tommy").expect("Since this is an empty table, the first row should be accepted automatically");
 		assert!(the_table.insert("Tommy").is_err(),"Adding a new row with the same name should return an error");
 		assert!(the_table.find("Tommy").unwrap().id == 0 );
