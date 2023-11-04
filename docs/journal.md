@@ -1382,3 +1382,43 @@ help: consider introducing a named lifetime parameter
 
 I'm going to switch to chapter 10, that explains lifetimes.
 
+Nov/4th/2023:
+=============
+
+Even better... I will follow the sequence. Chapter 9 then 10.
+
+panic! for big contract breaches.
+
+Result for recoverable errors.
+
+`bla()?.ble() can be used to concatenate operations that may throw results or options.
+
+https://doc.rust-lang.org/reference/expressions/operator-expr.html#the-question-mark-operator
+
+Generics in rust are probably faster than generics in java (and safer).
+
+In Rust, the concrete type of a generic is defined at COMPILE TIME. Which means that there is no concerns of autoboxing and type checking we would have with java. 
+
+Leading to faster code.
+
+On the other hand, because generics are defined at compile time, runtime linking to a dynamic library may be foolhardy. If even possible, at all.
+
+Big chance rust will not have reflection features at all.
+
+https://stackoverflow.com/questions/36416773/how-does-rust-implement-reflection .
+
+So... lifetimes tells rust when borrowed references expire. 
+
+# Borrow checkers are, as always, a B*TCH
+
+After finally solving the database.rs issues with lifetimes, we got into a more fundamental problem:
+
+We REALLY CAN'T have two hashmaps pointing to the same entity, right? The borrow checker doesn't allow that. 
+
+We can only store actual objects into the Hashmap. Not references to it.
+
+So, the solution was: have ONE hashmap that refers to rows by ID.
+
+Then have the hashmap by name referring to row IDs. 
+
+This will make both hashmaps to point to the same object, but one directly , the other indirectly (by id).
