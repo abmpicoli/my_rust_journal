@@ -1422,3 +1422,104 @@ So, the solution was: have ONE hashmap that refers to rows by ID.
 Then have the hashmap by name referring to row IDs. 
 
 This will make both hashmaps to point to the same object, but one directly , the other indirectly (by id).
+
+Nov/5th/2023:
+=============
+
+Rust forums: today I've learned that shadowing doesn't free resources.
+
+https://users.rust-lang.org/t/free-variables-after-last-usage/102004/28?u=abmpicoli 
+
+> abmpicoli
+> 35m
+
+> noob rust dev still learning the language.
+
+> But wouldn't shadowing var1 make it out of scope?
+
+> UPDATE: silly me, this was not the asked question :smiley: . It was "could rust deallocate the variable automatically for me since I don't use it in code anymore".
+
+> I mean
+> use std::fs;
+> fn main() {
+>     // {
+>     let var1 = fs::read_to_string("16mb-text-file.txt").unwrap();
+>     dbg!(&var1.len());
+>     // }
+>     let var1 = 0 ; // would free the old var1, since it is shadowed, right?
+>     let var2 = fs::read_to_string("11mb-text-file.txt").unwrap();
+>     dbg!(&var2.len());
+> }
+
+Shadowing is about variable names. Internally rust makes all variables to be an anonymous number. So while the variable
+is not effectively out of scope, it is there, even after shadowing: it is just unaccessible.
+
+There is a stack exchange topic about it : 
+
+https://stackoverflow.com/questions/45676411/why-does-shadowing-not-release-a-borrowed-reference/45676778#45676778 
+
+And in that topic there is something interesting about the compilation sequence:
+
+> t's not like the original r1 ceases to exist after it becomes shadowed; consider the MIR produced for your code without the last line (r2 binding):
+
+What is MIR?? Found this rust article :
+https://blog.rust-lang.org/2016/04/19/MIR.html 
+
+It seems there is an option to show intermediate artifacts when compiling... need to know how.
+
+Found it here:
+https://crates.io/crates/cargo-show-asm . 
+
+Summary of the day: 
+
+Discovered the rust impl train:
+
+As we add more and more traits for some generic thing to work with rust, we end up creating stuff like this:
+
+```
+#[derive(Eq,PartialEq,Hash,Debug)]
+struct Row<T:Display + Debug> {
+
+...
+
+struct Table<'a, T:Eq + PartialEq + Hash + Clone + Display + Debug> { 
+...
+
+impl<'b,T:Eq + PartialEq + Hash + Clone + Display +Debug > Table<'b,T>
+
+...
+
+}
+
+```
+
+Hm... it just dawned on me... 
+
+the java equivalent of a default interface method is the `#[derive` macro.
+
+java:
+
+public interface Something {
+	
+	public default String doSomething() {
+		return doThis(doThat());
+		doThat();
+	}
+	
+	public String doThis(String input) ;
+	public String doThat(String input);
+
+}
+
+RUST: 
+
+trait Something {
+
+	fn do_something() -> String ;
+	fn do_this(input:&String) -> String;
+	fn do_that(input:&String) -> String; 
+
+}
+
+// some procedural macro to implement do_something... BABY STEPS! Too confusing right now... 
+
