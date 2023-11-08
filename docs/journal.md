@@ -1523,3 +1523,24 @@ trait Something {
 
 // some procedural macro to implement do_something... BABY STEPS! Too confusing right now... 
 
+Nov/6th/2023 was used in the rust forums
+========================================
+
+https://users.rust-lang.org/t/rust-spec-and-implementations-opinions/102125/16
+
+Nov/7th/2023:
+=============
+Spent browsing forums.
+
+NOv/8th/2023:
+=============
+Thinking about the possibility of having some sort of discovered at runtime feature
+with rust. 
+
+
+This is the discussion why this is very difficult to do with rust.
+
+https://faultlore.com/blah/swift-abi/#what-is-abi-stability-and-dynamic-linking
+
+This api can be used to invoke java from rust.
+https://docs.rs/jni/latest/jni/
