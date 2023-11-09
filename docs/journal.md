@@ -1609,3 +1609,15 @@ failures:
 
 test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 ``` 
+
+Nov/9th/2023 part 2:
+====================
+
+In the rust forums there was this idea of "leaking" a string reference.
+
+https://users.rust-lang.org/t/str-vs-string-for-hashmap-key/102290/16?u=abmpicoli
+
+Will this work with my table structure? 
+
+TO DO...
+
