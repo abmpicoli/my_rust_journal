@@ -23,11 +23,11 @@ impl Display for IdMapping {
 	
 }
 
-struct Database<'a> {
+struct Database {
 
-	employees: Table<'a,&'a str>,
-	departments: Table<'a,&'a str>,
-	employee_vs_department: Table<'a,IdMapping>,
+	employees: Table<String>,
+	departments: Table<String>,
+	employee_vs_department: Table<IdMapping>,
 }
 
 #[derive(Eq,PartialEq,Hash,Debug)]
@@ -38,23 +38,23 @@ struct Row<T:Display + Debug> {
 	
 }
 
-struct Table<'a, T:Eq + PartialEq + Hash + Clone + Display + Debug> {
+struct Table<T:Eq + PartialEq + Hash + Clone + Display + Debug> {
 	next_primary_key: u64,
 	row_id_by_name: HashMap<T,u64>,
 	rows_by_id: HashMap<u64,Row<T>>,
-	name: &'a str
+	name: String
 		
 }
 
-impl<'b,T:Eq + PartialEq + Hash + Clone + Display +Debug > Table<'b,T> {
+impl<T:Eq + PartialEq + Hash + Clone + Display +Debug > Table<T> {
 	
-	fn new(name:&'b str) -> Self {
+	fn new(name:&str) -> Self {
 		
 		Table {
 			next_primary_key: 0,
 			rows_by_id: HashMap::new(),
 			row_id_by_name:HashMap::new(),
-			name:name
+			name: String::from(name)
 		}
 		
 	}
@@ -69,7 +69,7 @@ impl<'b,T:Eq + PartialEq + Hash + Clone + Display +Debug > Table<'b,T> {
 		self.next_primary_key+=1;
 		let row = Row  {
 			id:id2,
-			value:value2
+			value:value2.clone()
 		};
 		let valueKey = row.value.clone();
 		
@@ -110,26 +110,26 @@ mod tests {
 	use crate::database::*;	
 	#[test]
 	fn test_table() {
-		let mut the_table: Table<&str> = Table::new("my_table");
+		let mut the_table: Table<String> = Table::new("my_table");
 
 		// making the test to happen in an inner scope. Will the string references survive? 
 		
 		
 		{ 
 			let tommy1 = String::from("Tommy");
-			let value = the_table.insert(&tommy1).expect("Since this is an empty table, the first row should be accepted automatically");
+			let value = the_table.insert(tommy1).expect("Since this is an empty table, the first row should be accepted automatically");
 			assert_eq!(0,value);
 		};
 		{
 			let tommy2 = String::from("Tommy");
-			let response = the_table.insert(&tommy2);
+			let response = the_table.insert(tommy2);
 			if let Err(ref msg) = response {
 				println!("{}",msg);	
 			}
 			
 			assert!(response.is_err(),"Adding a new row with the same name should return an error");
 		};
-		let found_tommy = the_table.find("Tommy");
+		let found_tommy = the_table.find(String::from("Tommy"));
 		assert!(found_tommy.is_some() , "The find function should find Tommy under id 0");
 	}
 }

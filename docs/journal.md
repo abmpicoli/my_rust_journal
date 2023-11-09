@@ -1574,3 +1574,38 @@ error[E0597]: `tommy1` does not live long enough
 125 |             let response = the_table.insert(&tommy2);
     |                            --------- borrow later used here
 ```
+
+
+Long story short: for this database to work, the hashmap values and keys must be, well, VALUES, not references. 
+
+The instances of `&str` were all replaced by "String".
+
+And every insert and update involves CLONING the string. Which is awful. 
+
+Well... whatever.
+
+At least in the end I've got a successful test (the error in the find is because the test suite is not finished yet)
+
+```
+
+warning: `ch8_3_human_resources` (lib test) generated 8 warnings (6 duplicates)
+    Finished test [unoptimized + debuginfo] target(s) in 6.17s
+     Running unittests src/lib.rs (target/debug/deps/ch8_3_human_resources-43b3fa6b17d5eb4a)
+
+running 1 test
+test database::tests::test_table ... FAILED
+
+failures:
+
+---- database::tests::test_table stdout ----
+Value Tommy already exists in the database as row  0
+thread 'database::tests::test_table' panicked at src/database.rs:133:9:
+The find function should find Tommy under id 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    database::tests::test_table
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+``` 
