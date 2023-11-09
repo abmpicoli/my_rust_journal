@@ -1544,3 +1544,33 @@ https://faultlore.com/blah/swift-abi/#what-is-abi-stability-and-dynamic-linking
 
 This api can be used to invoke java from rust.
 https://docs.rs/jni/latest/jni/
+
+Nov/9th/2023:
+=============
+
+One thing in the database.rs code I did for tests was to keep every single variable under the same scope.
+
+What happens if the insertion operations happen within a scope? Will the test fail? YES! Miserably!
+
+Because the reference to the string is dropped out of scope.
+
+In short: we can't have references to &str inside a Hashmap, unless that hashmap has the same scope as the &str reference.
+Or shorter.
+
+I need to keep copies of that data.
+
+```
+error[E0597]: `tommy1` does not live long enough
+   --> src/database.rs:120:33
+    |
+119 |             let tommy1 = String::from("Tommy");
+    |                 ------ binding `tommy1` declared here
+120 |             let value = the_table.insert(&tommy1).expect("Since this is an empty table, the first row should be accepted automatically");
+    |                                          ^^^^^^^ borrowed value does not live long enough
+121 |             assert_eq!(0,value);
+122 |         };
+    |         - `tommy1` dropped here while still borrowed
+...
+125 |             let response = the_table.insert(&tommy2);
+    |                            --------- borrow later used here
+```

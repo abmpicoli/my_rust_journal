@@ -111,14 +111,24 @@ mod tests {
 	#[test]
 	fn test_table() {
 		let mut the_table: Table<&str> = Table::new("my_table");
-		let value = the_table.insert("Tommy").expect("Since this is an empty table, the first row should be accepted automatically");
-		assert_eq!(0,value);
-		let response = the_table.insert("Tommy");
-		if let Err(ref msg) = response {
-			println!("{}",msg);
-		}
+
+		// making the test to happen in an inner scope. Will the string references survive? 
+		
+		
+		{ 
+			let tommy1 = String::from("Tommy");
+			let value = the_table.insert(&tommy1).expect("Since this is an empty table, the first row should be accepted automatically");
+			assert_eq!(0,value);
+		};
+		{
+			let tommy2 = String::from("Tommy");
+			let response = the_table.insert(&tommy2);
+			if let Err(ref msg) = response {
+				println!("{}",msg);	
+			}
 			
-		assert!(response.is_err(),"Adding a new row with the same name should return an error");
+			assert!(response.is_err(),"Adding a new row with the same name should return an error");
+		};
 		let found_tommy = the_table.find("Tommy");
 		assert!(found_tommy.is_some() , "The find function should find Tommy under id 0");
 	}
