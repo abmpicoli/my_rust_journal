@@ -1692,3 +1692,8 @@ And well... it works. Even if I use a lifetime other than static. This test retu
 
 #### `Cargo test -- --show-output` for showing println content.
 
+https://doc.rust-lang.org/std/borrow/enum.Cow.html 
+
+https://users.rust-lang.org/t/str-vs-string-for-hashmap-key/102290/24?u=abmpicoli
+
+Cow can be used somehow. Pay attention to the tests. 
