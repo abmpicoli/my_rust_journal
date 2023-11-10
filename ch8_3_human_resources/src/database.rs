@@ -25,8 +25,8 @@ impl Display for IdMapping {
 
 struct Database {
 
-	employees: Table<String>,
-	departments: Table<String>,
+	employees: Table<&'static str>,
+	departments: Table<&'static str>,
 	employee_vs_department: Table<IdMapping>,
 }
 
@@ -131,6 +131,26 @@ mod tests {
 		};
 		let found_tommy = the_table.find(String::from("Tommy"));
 		assert!(found_tommy.is_some() , "The find function should find Tommy under id 0");
+	}
+	
+	#[test]
+	fn test_table_with_str<'a>() {
+		let mut the_table: Table<&'a str> = Table::new("my_table");
+
+		{ 
+			let tommy1:&'a str = String::from("Tommy").leak();
+			let value = the_table.insert(tommy1).expect("Since this is an empty table, the first row should be accepted automatically");
+			assert_eq!(0,value);
+		};
+		{
+			let tommy2:&'a str = String::from("Tommy").leak();
+			let response = the_table.insert(tommy2);
+			if let Err(ref msg) = response {
+				println!("{}",msg);	
+			}
+			assert!(response.is_err(),"Adding a new row with the same name should return an error");
+		};
+		
 	}
 }
 

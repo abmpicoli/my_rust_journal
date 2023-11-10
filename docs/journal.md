@@ -1621,3 +1621,71 @@ Will this work with my table structure?
 
 TO DO...
 
+Nov/10th/2023:
+==============
+
+Today I'm trying to change the database code to use static &str references. And see how that goes.
+
+Change in database.rs : will using a &'static reference compile?
+
+
+```
+diff --git a/ch8_3_human_resources/src/database.rs b/ch8_3_human_resources/src/database.rs
+index c7d20dc..a34fb21 100644
+--- a/ch8_3_human_resources/src/database.rs
++++ b/ch8_3_human_resources/src/database.rs
+@@ -25,8 +25,8 @@ impl Display for IdMapping {
+
+ struct Database {
+
+-       employees: Table<String>,
+-       departments: Table<String>,
++       employees: Table<&'static str>,
++       departments: Table<&'static str>,
+        employee_vs_department: Table<IdMapping>,
+ }
+```
+
+well... it worked, rust accepted it
+
+```
+warning: `ch8_3_human_resources` (lib test) generated 8 warnings (6 duplicates)
+    Finished test [unoptimized + debuginfo] target(s) in 9.63s
+     Running unittests src/lib.rs (target/debug/deps/ch8_3_human_resources-43b3fa6b17d5eb4a)
+
+running 1 test
+test database::tests::test_table ... FAILED
+
+failures:
+
+---- database::tests::test_table stdout ----
+Value Tommy already exists in the database as row  0
+thread 'database::tests::test_table' panicked at src/database.rs:133:9:
+The find function should find Tommy under id 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+```
+
+And well... it works. Even if I use a lifetime other than static. This test returned a success.
+
+```
+	#[test]
+	fn test_table_with_str<'a>() {
+		let mut the_table: Table<&'a str> = Table::new("my_table");
+
+		{ 
+			let tommy1:&'a str = String::from("Tommy").leak();
+			let value = the_table.insert(tommy1).expect("Since this is an empty table, the first row should be accepted automatically");
+			assert_eq!(0,value);
+		};
+		{
+			let tommy2:&'a str = String::from("Tommy").leak();
+			let response = the_table.insert(tommy2);
+			if let Err(ref msg) = response {
+				println!("{}",msg);	
+			}
+			assert!(response.is_err(),"Adding a new row with the same name should return an error");
+		};
+		
+	}
+
+```
