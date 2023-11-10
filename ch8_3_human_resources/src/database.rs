@@ -5,8 +5,6 @@ use std::fmt::Debug;
 use std::fmt::Display;
 use std::fmt;
 
-const DUPLICATED_ROW:&str="Duplicated row: there is already a {} with this {}" ;
-
 
 #[derive(Eq,PartialEq,Hash,Debug,Clone)]
 struct IdMapping {
@@ -23,15 +21,15 @@ impl Display for IdMapping {
 	
 }
 
-struct Database {
+struct Database<'a> {
 
-	employees: Table<&'static str>,
-	departments: Table<&'static str>,
+	employees: Table<&'a str>,
+	departments: Table<&'a str>,
 	employee_vs_department: Table<IdMapping>,
 }
 
-#[derive(Eq,PartialEq,Hash,Debug)]
-struct Row<T:Display + Debug> {
+#[derive(Eq,PartialEq,Hash,Debug,Clone)]
+struct Row<T:Display + Debug + Clone> {
 	
 	id: u64,
 	value: T
@@ -99,7 +97,10 @@ impl<T:Eq + PartialEq + Hash + Clone + Display +Debug > Table<T> {
 	}
 	
 	// find a row with the provided name.
-	fn find(&self,name: T) -> Option<Row<T>> {
+	fn find(&self,name: &T) -> Option<Row<T>> {
+		if self.row_id_by_name.contains_key(name) {
+			return Some(self.rows_by_id.get(self.row_id_by_name.get(name).unwrap()).unwrap().clone());
+		};
 		None
 	}
 	
@@ -129,7 +130,7 @@ mod tests {
 			
 			assert!(response.is_err(),"Adding a new row with the same name should return an error");
 		};
-		let found_tommy = the_table.find(String::from("Tommy"));
+		let found_tommy = the_table.find(&String::from("Tommy"));
 		assert!(found_tommy.is_some() , "The find function should find Tommy under id 0");
 	}
 	
