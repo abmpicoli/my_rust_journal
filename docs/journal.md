@@ -1697,3 +1697,40 @@ https://doc.rust-lang.org/std/borrow/enum.Cow.html
 https://users.rust-lang.org/t/str-vs-string-for-hashmap-key/102290/24?u=abmpicoli
 
 Cow can be used somehow. Pay attention to the tests. 
+
+Nov/11/2023:
+============
+
+I'm going to try and implement the missing table methods for the database.rs today.
+
+Well... my database structure seems to be wrong.
+
+A note on borrowing: 
+
+getting a value from a hashmap borrows the whole hashmap.
+
+```
+error[E0502]: cannot borrow `self.rows_by_id` as mutable because it is also borrowed as immutable
+   --> src/database.rs:100:4
+    |
+99  |             let row = self.rows_by_id.get(&id).unwrap();
+    |                       --------------- immutable borrow occurs here
+100 |             self.rows_by_id.remove(&id);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^ mutable borrow occurs here
+101 |             self.row_id_by_name.remove(&row.value);
+    |                                        ---------- immutable borrow later used here
+```
+
+First thing I had to do is to get a mutable reference to self.rows_by_id:
+
+		let idMap = &mut self.rows_by_id;
+
+Second is that a get will make the map immutable, unless we clone the row returned.
+
+```
+if idMap.contains_key(&id) {
+			let row = idMap.get(&id).unwrap().clone();
+```
+
+It always involves some sort of cloning ... 
+

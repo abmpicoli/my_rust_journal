@@ -11,6 +11,7 @@ struct IdMapping {
 	
 	key: u64,
 	value: u64,
+
 }
 
 impl Display for IdMapping {
@@ -26,6 +27,7 @@ struct Database<'a> {
 	employees: Table<&'a str>,
 	departments: Table<&'a str>,
 	employee_vs_department: Table<IdMapping>,
+
 }
 
 #[derive(Eq,PartialEq,Hash,Debug,Clone)]
@@ -80,19 +82,27 @@ impl<T:Eq + PartialEq + Hash + Clone + Display +Debug > Table<T> {
 	
 	}
 	
-	// dele
-	fn update(&mut self) -> Result<Row<T>,&str> {
-		Err("boom!")
-	}
-	
-	// delete a row by name
-	fn delete_by_data(&mut self,row: T ) -> Result<u64,&str> {
-		Err("boom!")
+	// delete a row by name. 
+	// returns the deleted id if successful, or an error with a message on failure.
+	fn delete_by_data(&mut self,content: &T ) -> Result<u64,&str> {
+		if let Some(row2) = self.find(content) {
+			self.row_id_by_name.remove(content);
+			self.rows_by_id.remove(&row2.id);
+			return Ok(row2.id);
+		}
+		return Err("Record not found");
 		
 	}
 	
 	fn delete_by_id(&mut self,id: u64) -> Result<u64,&str> {
-		Err("boom!")
+		let idMap = &mut self.rows_by_id;
+		if idMap.contains_key(&id) {
+			let value = idMap.get(&id).unwrap().value.clone();
+			idMap.remove(&id);
+			self.row_id_by_name.remove(&value);
+			return Ok(id);
+		}
+		return Err("Record not found");
 		
 	}
 	
@@ -151,6 +161,13 @@ mod tests {
 			}
 			assert!(response.is_err(),"Adding a new row with the same name should return an error");
 		};
+		{
+			let tommy3:&'a str = String::from("Tommy").leak();
+			assert_eq!(0,the_table.delete_by_data(&tommy3).unwrap());
+			assert_eq!(1,the_table.insert(tommy3).expect("Now that tommy was deleted, I should be able to add tommy again"),"A new tommy record should be added, with a new id");
+			assert_eq!(1,the_table.delete_by_id(1).expect("I should have the row id here, showing the deletion by id did work"));
+		};
+	
 		
 	}
 }
