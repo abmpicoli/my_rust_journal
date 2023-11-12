@@ -30,6 +30,43 @@ struct Database<'a> {
 
 }
 
+impl Database<'a> {
+	
+	fn new() -> Self {
+		
+		Database<'a> {
+			employees: new Table<&'a str>("employees"),
+			departments: new Table<&'a str>("departments"),
+			employee_vs_department: new Table<IdMapping>("employee_vs_department")
+		}
+		
+	}
+	
+	fn create_department(&mut self, &str department) -> Result<(),&str> {
+		
+		Err("Not implemented")
+		
+	}
+	fn create_person(&mut self, &str person) -> Result<(),&str> {
+		
+		Err("Not implemented")
+		
+	}
+	fn move_person_to_department(&mut self, &str person) -> Result<(),&str> {
+		
+		Err("Not implemented")
+		
+	}
+	
+	fn report(&self) -> &str {
+		
+		"not implemented"
+		
+	}
+	
+}
+
+
 #[derive(Eq,PartialEq,Hash,Debug,Clone)]
 struct Row<T:Display + Debug + Clone> {
 	
@@ -119,6 +156,7 @@ impl<T:Eq + PartialEq + Hash + Clone + Display +Debug > Table<T> {
 #[cfg(test)]
 mod tests {
 	use crate::database::*;	
+	use regex::Regex;
 	#[test]
 	fn test_table() {
 		let mut the_table: Table<String> = Table::new("my_table");
@@ -167,7 +205,54 @@ mod tests {
 			assert_eq!(1,the_table.insert(tommy3).expect("Now that tommy was deleted, I should be able to add tommy again"),"A new tommy record should be added, with a new id");
 			assert_eq!(1,the_table.delete_by_id(1).expect("I should have the row id here, showing the deletion by id did work"));
 		};
+	}
+	#[test]
+	fn test_database<'a>() {
+		let database: Database<'a> = Database::new();
+		
+		// I'm making this mutable, because I don't want to have terminal applications.
+		let mut person:&'a str = "use later";
+		let mut department:&'a str = "use later";
+		{
+			department = "Sales";
+			database.create_department(department).expect("The Sales department should be created with no issues");
+		
+		};
 	
+		{
+			person="Tommy";
+			database.create_person(person).expect("Tommy should be created.");
+			assert!(database.get_department(person).isNone());
+			department="Sales";
+			database.move_person_to_department(person,department).expect("Tommy should be moved to sales with no issues");
+			assert_eq!("Sales",database.get_department("Tommy").unwrap());
+			response = database.move_person_to_department(person,"Accounting");
+			assert!(response.is_err(),"The department must exist first. Adding a person to a non-existing department shouldn't happen");
+		};
+		{
+			person = "Sally";
+			department = "Sales";
+			database.create_person(person).expect("Sally should be created");
+			database.create_department(department).expect("Adding an existent department should be a no-op");
+			database.move_person_to_department(person,department);
+			assert_eq!("Sales",database.get_department("Sally").unwrap());
+		};
+		
+		
+		{
+			person="Ben";
+			department="Accounting";
+			assert!(database.move_person_to_department(person,department).isErr(),"It should not be possible to add a non-existing person to a non-existing department");
+			database.create_department(department);
+			assert!(database.move_person_to_department(person,department).isErr(),"It should not be possible to add a non-existing person to a department");
+			database.create_person(person);
+			database.move_person_to_department(person,department).expect("Now adding ben to accounting, now that we have ben, and we have the accounting department, should be ok");
+			
+		};
+		
+		{ 
+			assert_eq!("Accounting:Ben;Sales:Sally,Tommy",database.report(),"The report should have the departments in alphabetic order and the people belonging to the department in alphabetic order as well");
+		};
 		
 	}
 }

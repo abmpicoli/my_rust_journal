@@ -1734,3 +1734,10 @@ if idMap.contains_key(&id) {
 
 It always involves some sort of cloning ... 
 
+
+Nov/12/2023:
+============
+
+Today I did the specification of what the database must do (database.rs).
+
+The code is not even compiled yet, but today is Sunday.
