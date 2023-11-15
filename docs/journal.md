@@ -1741,3 +1741,20 @@ Nov/12/2023:
 Today I did the specification of what the database must do (database.rs).
 
 The code is not even compiled yet, but today is Sunday.
+
+Nov/15/2023:
+============
+
+Trying to make the database.rs tests to go green.
+
+...
+
+As I'm working on the database methods... I see more and more that what I'm doing, creating a Table structure, and adding a Database that contains those tables
+is overengineering to an absurd extent.
+
+All that I need is a HashMap between person and department, a department map (to avoid typos in departments) and a person map (to avoid typos in person names: adding a non-existing person to a department).
+
+And strings seems to be better than &str in general... I keep leaking stuff, while with strings I can simply pass them by read-only references, and the string already implement the copy trait.
+
+Well, for tomorrow.
+

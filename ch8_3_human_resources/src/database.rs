@@ -5,57 +5,56 @@ use std::fmt::Debug;
 use std::fmt::Display;
 use std::fmt;
 
-
-#[derive(Eq,PartialEq,Hash,Debug,Clone)]
-struct IdMapping {
-	
-	key: u64,
-	value: u64,
-
-}
-
-impl Display for IdMapping {
-	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        // Use `self.number` to refer to each positional data point.
-        write!(f, "({}, {})", self.key, self.value)
-    }
-	
-}
-
 struct Database<'a> {
 
 	employees: Table<&'a str>,
 	departments: Table<&'a str>,
-	employee_vs_department: Table<IdMapping>,
+	department_per_employee:HashMap<&'a str,&'a str>	
+
 
 }
 
-impl Database<'a> {
+impl <'a> Database<'a> {
 	
 	fn new() -> Self {
 		
-		Database<'a> {
-			employees: new Table<&'a str>("employees"),
-			departments: new Table<&'a str>("departments"),
-			employee_vs_department: new Table<IdMapping>("employee_vs_department")
+		Database {
+			employees: Table::new("employees"),
+			departments: Table::new("departments"),
+			department_per_employee : HashMap::new()
+			
 		}
 		
 	}
 	
-	fn create_department(&mut self, &str department) -> Result<(),&str> {
+	fn create_department(&mut self, department:&'a str) -> Result<(),&str> {
 		
-		Err("Not implemented")
+		if self.departments.insert(department).is_err() {
+			return Err("department already exists")
+		}
+		return Ok(())
+		
+		
+		
 		
 	}
-	fn create_person(&mut self, &str person) -> Result<(),&str> {
+	fn create_person(&mut self, person:&'a str) -> Result<(),&str> {
 		
-		Err("Not implemented")
+		if self.employees.insert(person).is_err() {
+			return Err("employee already registered")
+		}
+		Ok(())
 		
 	}
-	fn move_person_to_department(&mut self, &str person) -> Result<(),&str> {
+	fn move_person_to_department(&mut self, person:&'a str, department:&'a str) -> Result<(),&str> {
 		
-		Err("Not implemented")
+		self.department_per_employee.insert(String::from(person).leak(),String::from(department).leak());
+		Ok(())
 		
+	}
+	
+	fn get_department(&self, person:&str) -> Option<&'a str> {
+		None
 	}
 	
 	fn report(&self) -> &str {
@@ -114,8 +113,6 @@ impl<T:Eq + PartialEq + Hash + Clone + Display +Debug > Table<T> {
 		self.row_id_by_name.insert(valueKey,id2);
 		
 		Ok(id2)
-		
-		
 	
 	}
 	
@@ -156,7 +153,6 @@ impl<T:Eq + PartialEq + Hash + Clone + Display +Debug > Table<T> {
 #[cfg(test)]
 mod tests {
 	use crate::database::*;	
-	use regex::Regex;
 	#[test]
 	fn test_table() {
 		let mut the_table: Table<String> = Table::new("my_table");
@@ -208,7 +204,7 @@ mod tests {
 	}
 	#[test]
 	fn test_database<'a>() {
-		let database: Database<'a> = Database::new();
+		let mut database: Database = Database::new();
 		
 		// I'm making this mutable, because I don't want to have terminal applications.
 		let mut person:&'a str = "use later";
@@ -222,11 +218,11 @@ mod tests {
 		{
 			person="Tommy";
 			database.create_person(person).expect("Tommy should be created.");
-			assert!(database.get_department(person).isNone());
+			assert!(database.get_department(person).is_none());
 			department="Sales";
 			database.move_person_to_department(person,department).expect("Tommy should be moved to sales with no issues");
 			assert_eq!("Sales",database.get_department("Tommy").unwrap());
-			response = database.move_person_to_department(person,"Accounting");
+			let response = database.move_person_to_department(person,"Accounting");
 			assert!(response.is_err(),"The department must exist first. Adding a person to a non-existing department shouldn't happen");
 		};
 		{
@@ -242,9 +238,9 @@ mod tests {
 		{
 			person="Ben";
 			department="Accounting";
-			assert!(database.move_person_to_department(person,department).isErr(),"It should not be possible to add a non-existing person to a non-existing department");
+			assert!(database.move_person_to_department(person,department).is_err(),"It should not be possible to add a non-existing person to a non-existing department");
 			database.create_department(department);
-			assert!(database.move_person_to_department(person,department).isErr(),"It should not be possible to add a non-existing person to a department");
+			assert!(database.move_person_to_department(person,department).is_err(),"It should not be possible to add a non-existing person to a department");
 			database.create_person(person);
 			database.move_person_to_department(person,department).expect("Now adding ben to accounting, now that we have ben, and we have the accounting department, should be ok");
 			
@@ -255,5 +251,6 @@ mod tests {
 		};
 		
 	}
+
 }
 
