@@ -1758,3 +1758,17 @@ And strings seems to be better than &str in general... I keep leaking stuff, whi
 
 Well, for tomorrow.
 
+Nov/16/2023:
+============
+
+https://users.rust-lang.org/t/store-generic-trait-implementations-in-hashmap/73953/2?u=abmpicoli
+
+One of the most powerful features of Java is the idea that a Map is a generic interface.
+
+So, one can specify that a type accepts a Map. And that's it.
+
+This seems to be not possible at all in rust, unless this "Box" thing is used.
+
+Big bummer.
+
+
