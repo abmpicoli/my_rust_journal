@@ -1771,4 +1771,15 @@ This seems to be not possible at all in rust, unless this "Box" thing is used.
 
 Big bummer.
 
+For tomorrow: Chapter12
+
+Nov/18/2023:
+============
+
+Today I've discovered an experiment in the Brown Computer Science College about 
+rewriting the Rust book.
+
+https://rust-book.cs.brown.edu/
+ 
+I've gone through chapters 1 and 2 there.
 
