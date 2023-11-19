@@ -1783,3 +1783,15 @@ https://rust-book.cs.brown.edu/
 
 I've gone through chapters 1 and 2 there.
 
+Nov/19/2023:
+============
+
+Spent my time in the Rust forum. Where I've discovered that `cargo doc` documents **everything**: every single dependent package of your project.
+
+Which may cause some projects to inadvertedly become **huge** and slow to build.
+
+A `cargo doc --no-deps` avoids this behavior.
+
+https://users.rust-lang.org/t/why-so-many-files/102772 the discussion about this.
+
+https://github.com/rust-lang/cargo/issues/12998#issuecomment-1817886453 there was a reply about my issue with the lack of the [workspace] tag when generating cargo.toml files with `cargo new`
