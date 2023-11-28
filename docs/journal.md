@@ -1795,3 +1795,194 @@ A `cargo doc --no-deps` avoids this behavior.
 https://users.rust-lang.org/t/why-so-many-files/102772 the discussion about this.
 
 https://github.com/rust-lang/cargo/issues/12998#issuecomment-1817886453 there was a reply about my issue with the lack of the [workspace] tag when generating cargo.toml files with `cargo new`
+
+
+Nov/24/2023:
+============
+
+The rust forum is giving me burnout and is distracting me from my goal, that is to learn rust in the first place.
+
+So, I will change my approach: I will still use the brown.edu version of the rust book, 
+but I will go back to chapter 12.
+
+Nov/28/2023:
+============
+
+I've got vacation burnout. Had to drop studies.
+
+But I'm changing strategy: I'm going to skim through the whole book. Once that is done, I will get back to chapter 12 and
+*then* try to work with the grep concept. I have this feel that I can't get deep enough without have at least a basic
+understanding of the language features.
+
+The background questions and doubts about the benefits of learning the language itself are still nagging at me, big time.
+
+13.1 - closures. Let's play with some closures.
+
+A closure is a variable that contains a function. The type of a closure is a `Fn(args)`
+
+Let's follow the train:
+
+A closure starts with a closure specification and a return type:
+
+`let mut x = | y:i32 | -> i32 { 1 + 1 }` 
+
+The part ` | y:i32 | -> i32 ` is the closure signature: input parameters and outputs.
+
+This got me thinking: "Hey! Finally I will be able to introduce some dynamism to this language!"... PEEEM!!!! WRONG!!! THINK AGAIN!!!!
+
+Because *THIS* doesn't work:
+```
+    let z = 42;
+    let mut x = |y:i32 | -> i32 { z+y+1 } ;
+	println!("The result is {}",x(10));
+	{
+			let k = 43;
+			x = | y:i32 | -> i32 { z + k + y + 1 };
+	}
+```
+
+```
+abpicoli@DESKTOP-EPFPMPH:/mnt/e/projetos/my_rust_journal/ch13_skim/src$ cargo run
+   Compiling ch13_skim v0.1.0 (/mnt/e/projetos/my_rust_journal/ch13_skim)
+error[E0308]: mismatched types
+ --> src/main.rs:8:8
+  |
+4 |     let mut x = |y:i32 | -> i32 { z+y+1 } ;
+  |                 --------------- the expected closure
+...
+8 |             x = |y:i32 | -> i32 { z + k + y + 1 };
+  |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected closure, found a different closure
+  |
+```
+
+Closures are not exactly overridable by anything other than the original closure. So, can you use it as a discardable parameter within a function call? YES. Can you do
+some crazy `s*t` by changing functions in the middle of the code? No.
+
+The book explains further that you can be "lazy" about closures. Their intended used is within a normal function call... discardable things...
+
+Because of that you can omit the signature, because it is "obvious" what the parameters are when a return type is expected.
+
+```
+fn  add_one_v1   (x: u32) -> u32 { x + 1 }
+let add_one_v2 = |x: u32| -> u32 { x + 1 };
+let add_one_v3 = |x|             { x + 1 };
+let add_one_v4 = |x|               x + 1  ;
+```
+
+by default closures takes the least invasive approach to consume a parameter:
+
+It borrows immutably if it can. It borrows mutably if the original variable is mutable. 
+
+If you really want a closure to move and consume the function, you need to add the `move` keyword.
+
+```
+// borrows immutable:
+let only_borrows = || println!("From closure: {:?}", list);
+
+// borrows mutable: (because of the mut keyword?)
+let mut borrows_mutably = || list.push(7);
+```
+
+If you don't place the "mut" keyword in the borrows_mutable, the closure is not considered a mutable closure (that is, a closure that changes the inbound content).
+
+```
+error[E0596]: cannot borrow `borrows_mutably` as mutable, as it is not declared as mutable
+ --> src/main.rs:8:2
+  |
+6 |     let borrows_mutably = || list.push(7);
+  |                              ---- calling `borrows_mutably` requires mutable binding due to mutable borrow of `list`
+7 |
+8 |     borrows_mutably();
+  |     ^^^^^^^^^^^^^^^ cannot borrow as mutable
+  |
+help: consider changing this to be mutable
+  |
+6 |     let mut borrows_mutably = || list.push(7);
+  |         +++
+
+```
+
+Regarding the "move" thing: 
+
+to simulate stuff like this:
+
+```
+fn throwAway(x:String) {
+	
+		println!("This string will be consumed forever:{}",x);
+	
+}
+
+fn main() {
+    println!("Hello, world!");
+	let mut list = vec![1, 2, 3];
+    println!("Before defining closure: {:?}", list);
+	// will this throw an error? What error?
+    let borrows_mutably = || list.push(7);
+	
+	
+	borrows_mutably();
+	println!("After defining closure: {:?}", list);
+
+	let something_that_is_moved=String::from("Oh oh");
+	throwAway(something_that_is_moved);
+	println!("It is lost, right? {}",&something_that_is_moved);
+// error[E0382]: borrow of moved value: `something_that_is_moved`
+  // --> src/main.rs:20:35
+   // |
+// 18 |     let something_that_is_moved=String::from("Oh oh");
+   // |         ----------------------- move occurs because `something_that_is_moved` has type `String`, which does not implement the `Copy` trait
+// 19 |     throwAway(something_that_is_moved);
+   // |               ----------------------- value moved here
+// 20 |     println!("It is lost, right? {}",&something_that_is_moved);
+   // |                                      ^^^^^^^^^^^^^^^^^^^^^^^^ value borrowed here after move
+   // |
+// note: consider changing this parameter type in function `throwAway` to borrow instead if owning the value isn't necessary
+	
+}
+```
+
+Can we make the "throwaway" function as a closure?
+
+## MIND THAT Rust is smart(ish) but not that smart:
+
+```
+	let throw_away = |x| -> () { println!("Will not throw away, right? {}",x) };
+	let something_that_is_moved=String::from("Oh oh");
+	throw_away(something_that_is_moved); // THIS WILL THROW SOMETHING_THAT_IS_MOVED AWAY, ANYWAY! Rust identified that *"Oh, ok, x is of type String! Not &String, &mut String... String)."*
+```
+
+But ... MIND THE MESSAGE: 
+
+error[E0382]: borrow of moved value: `something_that_is_moved`
+  --> src/main.rs:12:42
+   |
+10 |     let something_that_is_moved=String::from("Oh oh");
+   |         ----------------------- move occurs because `something_that_is_moved` has type `String`, which does not implement the `Copy` trait
+11 |     throw_away(something_that_is_moved);
+   |                ----------------------- value moved here
+12 |     println!("This is not moved, right? {}",&something_that_is_moved);
+   |                                             ^^^^^^^^^^^^^^^^^^^^^^^^ value borrowed here after move
+   |
+help: consider cloning the value if the performance cost is acceptable
+   |
+11 |     throw_away(something_that_is_moved.clone());
+   |                                       ++++++++
+
+String does not implement the Copy trait. Will it work for a vec! ?
+
+Nope.
+
+The big difference between my examples and the book itself is that I'm passing an input parameter!!
+
+ORIGINAL CHAPTER 12 EXAMPLE:
+
+```
+let only_borrows = || <<<<< NO PARAMETER HERE <<< println!("From closure: {:?}", list);
+```
+
+There is no miracle: if I pass a parameter to a closure, it will follow the same rules that a function would.
+
+
+
+
