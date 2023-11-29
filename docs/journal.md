@@ -1975,14 +1975,30 @@ Nope.
 
 The big difference between my examples and the book itself is that I'm passing an input parameter!!
 
-ORIGINAL CHAPTER 12 EXAMPLE:
+ORIGINAL CHAPTER 13 EXAMPLE:
 
 ```
-let only_borrows = || <<<<< NO PARAMETER HERE <<< println!("From closure: {:?}", list);
+let only_borrows = ||  println!("From closure: {:?}", list);
+                   ↑
+				   |--- no parameter here
 ```
 
 There is no miracle: if I pass a parameter to a closure, it will follow the same rules that a function would.
 
+Nov/29/2023
+===========
 
+Still studying closures.
 
+###
 
+Also skimmed through the crates system and rustdoc. (ch.14)
+
+I have a worry about rust... memory allocation. Since there is no constrains and no garbage collection, and hence no memory manager, memory fragmentation
+does occur. Which means that, depending on the application, rust can become somewhat greedy and unchecked. 
+
+I've searched for "heap management" in rust.
+
+I'm now skimming through the smart pointer systems.
+
+Stopped in RC smart pointer.
