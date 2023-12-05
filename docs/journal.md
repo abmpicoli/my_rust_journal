@@ -1990,7 +1990,6 @@ Nov/29/2023
 
 Still studying closures.
 
-###
 
 Also skimmed through the crates system and rustdoc. (ch.14)
 
@@ -2002,3 +2001,163 @@ I've searched for "heap management" in rust.
 I'm now skimming through the smart pointer systems.
 
 Stopped in RC smart pointer.
+
+Nov/30/2023
+===========
+
+Keep reading chapter 15 - smart pointers https://rust-book.cs.brown.edu/ch15-04-rc.html 
+
+SESSION 1: 9:12brt - 9:43
+
+Session 2: 9:49brt - 10:24    fearless concurrency https://rust-book.cs.brown.edu/ch16-00-concurrency.html 
+
+Session 3: 10:30 -   11:04    fearless concurrency https://rust-book.cs.brown.edu/ch16-02-message-passing.html 
+
+Session 4: 11:10 -  11:44     https://rust-book.cs.brown.edu/ch16-04-extensible-concurrency-sync-and-send.html
+
+Dec/1st/2023
+============
+
+Session 1: 8:20brt-8:44 https://rust-book.cs.brown.edu/ch17-05-design-challenge.html#ch17-05-design-challenge-references-q 
+Session 2: 8:52brt- 9:13 - having a bad day today.
+
+Dec/3rd/2023
+============
+
+Creating a big post in the rust forums. And then decided not to post it.
+
+Dec/4th/2023:
+=============
+
+9:41 - 10:32 https://rust-book.cs.brown.edu/ch18-00-patterns.html starting to see unsafe rust.
+
+10:37 - 11:12 https://rust-book.cs.brown.edu/ch19-06-macros.html 
+
+Well... that finishes the "book skimming".
+
+Discussion on the framework project we have at work.
+
+1) Processors are configured with a configuration file. 
+
+2) Processors specify the next operation. 
+
+3) Processors will work with an agnostic hierarchical tree?
+
+Dec/5th/2023:
+=============
+
+After some soul searching, I've decided to fall back into the rust book, and try to answer all the quizzes. Got into chapter 4 so far.
+
+I got a strange code snippet, that I want to test if it does make sense:
+
+```
+fn main() {
+    let first = String::from("Ferris"); // THIS IS A NON-MUTABLE VARIABLE!!!
+    let full = add_suffix(first); // AND I CAN USE IT INTO A MUTABLE FUNCTION!
+    println!("{full}");
+}
+
+fn add_suffix(mut name: String) -> String {
+    name.push_str(" Jr.");
+    name
+}
+```
+
+And... yes, it works!
+
+I believe what I can't do is to invoke a mutable method from an immutable variable.
+
+But I can move the unmutable variable into a mutable variable, perform the mutation, and then move it back.
+
+```
+fn main() {
+	let first = String::from("Ferris");
+	let mut first = first; // making first mutable.
+	first.push_str(" Jr.");
+	println!("{first}");
+}
+```	
+
+Now, I suppose I can't set the string is mutable from inside the function, without explicitly saying the parameter is mutable in the first place, right?
+
+```
+fn main() {
+    let first = String::from("Ferris"); // THIS IS A NON-MUTABLE VARIABLE!!!
+    let full = add_suffix(first); // AND I CAN USE IT INTO A MUTABLE FUNCTION!
+    println!("{full}");
+}
+
+fn add_suffix(name: String) -> String {
+    let mut name = name;
+	name.push_str(" Jr.");
+    name
+}
+```
+
+AND... it COMPILES!!!
+
+I believe that, while there is nobody else borrowing a reference to the variable, mutating it will work.
+
+So, this won't work.
+
+I'm still confused with chapter 4.1 and what do they consider undefined behavior. And discovered that the heap is shared by *The whole operating system* . 
+
+Java gives this impression that the heap is some safe construct implicit to a language itself. It isn't. The operating system is the ultimate memory provider, after all.
+
+So, to have two free() operations is asking the operating system to free memory pointed by address X, twice. The first call will contain the data you have allocated yourself.
+
+In between another process may have allocated memory in the same address. And a free will free the pointer from ANOTHER PROCESS. Dangerous stuff indeed: because then a third
+process may allocate the same address, write some garbage, and then give the second process a very cryptic content, that has nothing to do with what the program demanded.
+
+Pseudocode for three programs that will run concurrently
+
+> NOTE: I'm aware that heap doesn't work in such small memory blocks. I'm just hipothesizing here a device with very low memory 
+where OS memory requests are very fine-grained.
+
+It all depends on the logic used for memory allocation x actual operating system allocations, that I'm treating as a black box here.
+
+
+
+Program 1:
+
+1."Allocate 100 bytes for me to write an SQL statement."
+
+2. "Write into the address the query "SELECT 1 FROM SYSDUMMY1"
+
+3. "Call the database with the query stored in the heap
+
+Program 2:
+
+1. "Allocate 10 bytes for me to write BANANA 42"
+
+2. "Write 'BANANA 42' into the heap".
+
+3. "Send the message into the console".
+
+4. "Free the heap content"
+
+5. "Free the heap again"
+
+Program 3:
+
+1. "Allocate 100 bytes for me."
+
+2. Read a message from sysin.
+
+The operating system because of concurrency will run this programs in sequence for each one, but in arbitrary order between them.
+
+So, imagine this scenario: Program 2.1 and 2.2 and 2.3 and 2.4 is executed. At the heap position, say, 100, I will have "BANANA 42" inside. But since I've freed the variable, position 100 is available again for data.
+
+Program 1.1 and 1.2 runs, and overwrites the content at position 100 with "SELECT 1 FROM SYSDUMMY1". After all 2.4 did free the space, right?
+
+Program 2.5 runs, freeing the space again. 
+
+Program 3.1 and 3.2 run. Because address 100 was "free", the content of 100 is what the user typed, say, "HELLO WORLD!"  : so at 100: I will have HELLO WORLD!M SYSDUMMY1
+
+Program 1.3 will try to query the database with the query "HELLO WORLD!M SYSDUMMY1" . BOOM!
+
+
+https://rust-book.cs.brown.edu/ch04-01-what-is-ownership.html 
+
+Stopped at chapter 4-2 https://rust-book.cs.brown.edu/ch04-02-references-and-borrowing.html
+
